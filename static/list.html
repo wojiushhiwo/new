@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全部工作室 · 跑刀避雷指南 | 三角洲红黑榜</title>
+  <meta name="description" content="三角洲行动跑刀工作室完整列表，按平台分类查看闲鱼/抖音/B站工作室评价，黑名单白名单一目了然。">
+  <meta name="keywords" content="三角洲行动,跑刀工作室黑名单,护航测评,闲鱼跑刀">
+  <meta property="og:title" content="全部工作室 · 跑刀避雷指南">
+  <meta property="og:description" content="三角洲跑刀工作室完整红黑榜，接单前必查。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bileizhinan.top/list.html">
+  <link rel="canonical" href="https://bileizhinan.top/list.html">
+  <link rel="icon" type="image/svg+xml" href="/static/img/logo.svg">
+  <link rel="stylesheet" href="css/style.css?v=1779901786">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      
+            <nav>
+        <a href="/">首页</a>
+        <span id="navLogin"></span>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>📋 工作室红黑榜</h1>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterList('all', this)">全部</button>
+        <button class="filter-btn danger" onclick="filterList('danger', this)">🔴 黑名单</button>
+        <button class="filter-btn warning" onclick="filterList('warning', this)">🟡 存疑</button>
+        <button class="filter-btn safe" onclick="filterList('safe', this)">🟢 白名单</button>
+      </div>
+<div class="filter-bar" id="platformFilters">
+        <button class="filter-btn active" onclick="filterPlatform('all', this)">🌐 全部平台</button>
+        <button class="filter-btn xianyu" onclick="filterPlatform('闲鱼', this)">📱 闲鱼</button>
+        <button class="filter-btn douyin" onclick="filterPlatform('抖音', this)">🎵 抖音</button>
+        <button class="filter-btn bilibili" onclick="filterPlatform('B站', this)">📺 B站</button>
+        <button class="filter-btn xiaohongshu" onclick="filterPlatform('小红书', this)">📕 小红书</button>
+      </div>
+      <div class="search-mini">
+        <input type="text" id="listSearch" placeholder="在列表中搜索..." oninput="filterList()">
+      </div>
+    </div>
+  </section>
+
+  <section class="list-section">
+    <div class="container">
+      <div class="card-list" id="fullList">
+        <p class="loading">加载中...</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>跑刀避雷指南 · 纯绿玩家自建测评站</p>
+      <p class="footer-small">数据来源于玩家投稿，仅供参考。接单前请自行判断。</p>
+    </div>
+  </footer>
+
+  
+  <script src="js/app.js?v=1779902031"></script>
+</body>
+</html>

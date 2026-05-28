@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>跑刀避雷指南 · 三角洲行动工作室红黑榜 | 跑刀护航评价</title>
+  <meta name="description" content="三角洲行动跑刀工作室真实用户评价、护航测评、黑名单查询。接单前先查一查，防止被骗押金。">
+  <meta name="keywords" content="三角洲行动,跑刀工作室,护航,三角洲跑刀,跑刀避雷,工作室黑名单">
+  <meta property="og:title" content="跑刀避雷指南 · 三角洲工作室红黑榜">
+  <meta property="og:description" content="三角洲行动跑刀工作室真实评价，接单防坑必查。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bileizhinan.top">
+  <link rel="canonical" href="https://bileizhinan.top/">
+  <link rel="icon" type="image/svg+xml" href="/static/img/logo.svg">
+  <link rel="stylesheet" href="css/style.css?v=1779901786">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      
+            <nav>
+        
+        <span id="navLogin"></span>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>三角洲跑刀工作室 <span class="highlight">红黑榜</span></h1>
+      <p class="subtitle">纯绿玩家视角 · 真实测评 · 接单防坑</p>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜工作室名字，比如：武汉禄昌商贸">
+        <button id="searchBtn" onclick="doSearch()">🔍 查一下</button>
+      </div>
+      <p class="search-tip">搜不到？<a href="submit.html">点这里曝光</a>，帮兄弟避雷</p>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="container">
+      <div class="stat-card">
+        <span class="stat-number" id="totalCount">--</span>
+        <span class="stat-label">收录工作室</span>
+      </div>
+      <div class="stat-card danger">
+        <span class="stat-number" id="blackCount">--</span>
+        <span class="stat-label">黑名单</span>
+      </div>
+      <div class="stat-card safe">
+        <span class="stat-number" id="whiteCount">--</span>
+        <span class="stat-label">白名单</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number" id="reportCount">--</span>
+        <span class="stat-label">避雷记录</span>
+      </div>
+    </div>
+  </section>
+
+<section class="platforms">
+    <div class="container">
+      <div class="platform-head">
+        <h2>📂 按平台查看</h2>
+      </div>
+      <div class="platform-grid" id="platformGrid">
+      </div>
+    </div>
+  </section>
+  <section class="recent">
+    <div class="container">
+      <h2>🆕 最近收录</h2>
+      <div class="card-list" id="recentList">
+        <p class="loading">加载中...</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="howto">
+    <div class="container">
+      <h2>📌 怎么用这个站</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <p><strong>搜名字</strong> — 接单前搜一下工作室名字，看看有没有雷</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <p><strong>看评价</strong> — 红榜是靠谱的，黑榜是跑路/骗押金的</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <p><strong>投稿曝光</strong> — 被坑了就来投稿，帮兄弟们避雷</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>跑刀避雷指南 · 纯绿玩家自建测评站</p>
+      <p class="footer-small">数据来源于玩家投稿，仅供参考。接单前请自行判断。</p>
+    </div>
+  </footer>
+
+  <!-- Search Results Modal -->
+  <div class="search-results-overlay" id="searchModal">
+    <div class="search-results-modal">
+      <div class="modal-header">
+        <h3>🔍 搜索结果</h3>
+        <button class="modal-close" onclick="closeSearch()">✕</button>
+      </div>
+      <div id="searchResults"></div>
+    </div>
+  </div>
+
+  
+  <script src="js/app.js?v=1779902031"></script>
+</body>
+</html>

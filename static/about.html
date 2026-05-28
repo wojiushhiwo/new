@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于 · 跑刀避雷指南</title>
+  <link rel="icon" type="image/svg+xml" href="/static/img/logo.svg">
+  <link rel="stylesheet" href="css/style.css?v=1779902000">
+  <style>
+    .about-section {
+      max-width: 700px; margin: 40px auto; padding: 0 20px;
+    }
+    .about-section h1 { font-size: 1.6rem; margin-bottom: 8px; }
+    .about-section .subtitle { color: #8a8aaa; font-size: 0.9rem; margin-bottom: 30px; }
+    .about-card {
+      background: #fff; border-radius: 14px; padding: 24px; margin-bottom: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .about-card h2 { font-size: 1.1rem; margin-bottom: 12px; }
+    .about-card p, .about-card li { font-size: 0.9rem; line-height: 1.7; color: #444; }
+    .about-card ul { padding-left: 18px; }
+    .about-card li { margin-bottom: 6px; }
+    .contact-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .contact-item .icon { font-size: 1.2rem; }
+    .contact-item a { color: var(--primary, #4a6cf7); text-decoration: none; }
+    .contact-item a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      
+            <nav>
+        <a href="/">首页</a>
+        <span id="navLogin"></span>
+      </nav>
+    </div>
+  </header>
+
+    <main>
+    <section class="about-section">
+      <h1 id="pageTitle">关于本站</h1>
+      <p class="subtitle" id="pageSubtitle">纯绿玩家自建 · 三角洲跑刀工作室测评站</p>
+
+      <div class="about-card">
+        <h2>🎯 本站目的</h2>
+        <div id="aboutPurpose">三角洲行动跑刀工作室真实测评站，帮助玩家接单前查一查，防止被骗押金。</div>
+      </div>
+
+      <div class="about-card">
+        <h2>📊 数据来源</h2>
+        <div id="aboutDataSource">所有数据均来自玩家真实投稿，每条投稿审核通过后发布。</div>
+      </div>
+
+      <div class="about-card">
+        <h2>🎮 三大平台</h2>
+        <ul>
+          <li><strong>📱 闲鱼</strong> — 最常见跑刀交易平台</li>
+          <li><strong>🎵 抖音</strong> — 主播带货/接单</li>
+          <li><strong>📺 B站</strong> — 视频推广/接单</li>
+        </ul>
+      </div>
+
+      <div class="about-card">
+        <h2>📞 联系 & 合作</h2>
+        <div id="aboutContact" style="white-space:pre-line;line-height:1.8;font-size:0.9rem;color:#444;">邮箱：contact@bileizhinan.top&#10;抖音：私信 @三角洲跑刀避雷指南&#10;B站：私信 @三角洲跑刀测评</div>
+        <p style="margin-top:10px;font-size:0.8rem;color:#8a8aaa;">如果你是工作室，想申请认证或对榜单有异议，也可以通过以上方式联系我们。</p>
+      </div>
+
+      <div class="about-card" style="border-left:3px solid #e74c3c;">
+        <h2>⚠️ 免责声明</h2>
+        <div id="aboutDisclaimer" style="font-size:0.85rem;">本站数据由玩家投稿整理，仅供参考。接单前请自行判断。</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  fetch('/api/settings').then(function(r){return r.json();}).then(function(s){
+    if (s.about_purpose) document.getElementById('aboutPurpose').textContent = s.about_purpose;
+    if (s.about_data_source) document.getElementById('aboutDataSource').textContent = s.about_data_source;
+    if (s.about_contact) document.getElementById('aboutContact').textContent = s.about_contact;
+    if (s.about_disclaimer) document.getElementById('aboutDisclaimer').textContent = s.about_disclaimer;
+  });
+  </script>
+
+  <footer class="footer">
+    <div class="container">
+      <p>跑刀避雷指南 · 纯绿玩家自建测评站</p>
+      <p class="footer-small" style="font-size:0.75rem;color:#8a8aaa;margin-top:4px;">数据来源于玩家投稿，仅供参考。接单前请自行判断。</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js?v=1779902000"></script>
+</body>
+</html>

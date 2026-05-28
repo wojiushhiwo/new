@@ -1,0 +1,33 @@
+{
+  "s001": [
+    {
+      "id": "c1779874713688",
+      "user": "admin",
+      "content": "测试评论，这家工作室不错！",
+      "date": "2026-05",
+      "status": "approved"
+    },
+    {
+      "id": "c1779874912730",
+      "user": "admin",
+      "content": "这家不错，已上号测试过",
+      "date": "2026-05",
+      "status": "approved"
+    },
+    {
+      "id": "c1779875492822",
+      "user": "admin",
+      "content": "test from curl",
+      "date": "2026-05",
+      "status": "approved"
+    },
+    {
+      "id": "c1779877993996",
+      "user": "admin",
+      "content": "test from sdci",
+      "date": "2026-05",
+      "status": "approved"
+    }
+  ],
+  "s016": []
+}

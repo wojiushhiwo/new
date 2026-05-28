@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0e1a"/>
+      <stop offset="50%" stop-color="#141b2d"/>
+      <stop offset="100%" stop-color="#0a0e1a"/>
+    </linearGradient>
+    <linearGradient id="accent1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff6b35"/>
+      <stop offset="100%" stop-color="#f7c948"/>
+    </linearGradient>
+    <linearGradient id="accent2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="100%" stop-color="#7b2ff7"/>
+    </linearGradient>
+    <linearGradient id="glow1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowBig">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="hexClip">
+      <polygon points="60,0 120,35 120,105 60,140 0,105 0,35"/>
+    </clipPath>
+    <pattern id="hexPattern" x="0" y="0" width="120" height="140" patternUnits="userSpaceOnUse" opacity="0.03">
+      <polygon points="60,0 120,35 120,105 60,140 0,105 0,35" fill="none" stroke="#4a6cf7" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  
+  <!-- Hex pattern overlay -->
+  <rect width="1920" height="1080" fill="url(#hexPattern)"/>
+
+  <!-- Top light beam -->
+  <rect x="0" y="0" width="1920" height="300" fill="url(#glow1)" opacity="0.3"/>
+
+  <!-- Diagonal lines -->
+  <g opacity="0.04" stroke="#fff" stroke-width="1">
+    <line x1="0" y1="1080" x2="600" y2="0"/>
+    <line x1="200" y1="1080" x2="800" y2="0"/>
+    <line x1="400" y1="1080" x2="1000" y2="0"/>
+    <line x1="600" y1="1080" x2="1200" y2="0"/>
+    <line x1="800" y1="1080" x2="1400" y2="0"/>
+    <line x1="1000" y1="1080" x2="1600" y2="0"/>
+    <line x1="1200" y1="1080" x2="1800" y2="0"/>
+    <line x1="1400" y1="1080" x2="1920" y2="0"/>
+  </g>
+
+  <!-- Crosshair decoration -->
+  <g transform="translate(1600, 200)" opacity="0.06">
+    <line x1="-80" y1="0" x2="80" y2="0" stroke="#00d4ff" stroke-width="2"/>
+    <line x1="0" y1="-80" x2="0" y2="80" stroke="#00d4ff" stroke-width="2"/>
+    <circle cx="0" cy="0" r="30" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="8" fill="#00d4ff"/>
+  </g>
+
+  <!-- Crosshair decoration 2 -->
+  <g transform="translate(300, 800)" opacity="0.04">
+    <line x1="-60" y1="0" x2="60" y2="0" stroke="#ff6b35" stroke-width="2"/>
+    <line x1="0" y1="-60" x2="0" y2="60" stroke="#ff6b35" stroke-width="2"/>
+    <circle cx="0" cy="0" r="25" fill="none" stroke="#ff6b35" stroke-width="1.5"/>
+  </g>
+
+  <!-- Tactical corner brackets -->
+  <g stroke="#00d4ff" stroke-width="2" fill="none" opacity="0.3">
+    <!-- Top left -->
+    <path d="M 40,80 L 40,40 L 80,40"/>
+    <path d="M 40,80 L 40,40 L 80,40" transform="translate(0, 0)" opacity="0.5">
+      <animate attributeName="opacity" values="0.5;0.2;0.5" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <!-- Top right -->
+    <path d="M 1840,80 L 1840,40 L 1880,40"/>
+    <!-- Bottom left -->
+    <path d="M 40,1000 L 40,1040 L 80,1040"/>
+    <!-- Bottom right -->
+    <path d="M 1840,1000 L 1840,1040 L 1880,1040"/>
+  </g>
+
+  <!-- Top accent line -->
+  <rect x="0" y="0" width="1920" height="3" fill="url(#accent1)"/>
+
+  <!-- Main title area -->
+  <g transform="translate(960, 420)" text-anchor="middle">
+    <!-- Subtitle above -->
+    <text x="0" y="-90" fill="#00d4ff" font-family="Arial, sans-serif" font-size="24" letter-spacing="8" opacity="0.8" filter="url(#glow)">
+      DELTA FORCE
+    </text>
+
+    <!-- Decorative line -->
+    <line x1="-200" y1="-65" x2="200" y2="-65" stroke="url(#accent1)" stroke-width="2"/>
+    <circle cx="-200" cy="-65" r="4" fill="#ff6b35"/>
+    <circle cx="200" cy="-65" r="4" fill="#f7c948"/>
+
+    <!-- Main title -->
+    <text x="2" y="-12" fill="#000" font-family="Arial Black, sans-serif" font-size="80" font-weight="900" opacity="0.3">
+      三角洲行动
+    </text>
+    <text x="0" y="-14" fill="#fff" font-family="Arial Black, sans-serif" font-size="80" font-weight="900" filter="url(#glowBig)">
+      三角洲行动
+    </text>
+
+    <!-- Subtitle -->
+    <text x="0" y="40" fill="#f7c948" font-family="Arial, sans-serif" font-size="32" font-weight="700" letter-spacing="6">
+      跑 刀 避 雷 指 南
+    </text>
+
+    <!-- Decorative line below -->
+    <line x1="-240" y1="60" x2="240" y2="60" stroke="url(#accent2)" stroke-width="1.5"/>
+    
+    <!-- Tagline -->
+    <text x="0" y="100" fill="rgba(255,255,255,0.4)" font-family="Arial, sans-serif" font-size="16" letter-spacing="4">
+      纯绿玩家视角 · 真实测评 · 接单防坑
+    </text>
+  </g>
+
+  <!-- Bottom decoration - weapon-like silhouette -->
+  <g transform="translate(960, 900)" opacity="0.12">
+    <path d="M 0,-100 L -400,-30 L -600,0 L -700,20 L -700,40 L -500,30 L -400,35 L 0,60 Z" fill="#00d4ff"/>
+    <path d="M 0,-100 L 400,-30 L 600,0 L 700,20 L 700,40 L 500,30 L 400,35 L 0,60 Z" fill="#7b2ff7"/>
+  </g>
+
+  <!-- Number counter decoration -->
+  <g transform="translate(960, 780)" text-anchor="middle" opacity="0.15">
+    <text x="-160" y="0" fill="#00d4ff" font-family="Arial, sans-serif" font-size="48" font-weight="bold">0</text>
+    <text x="-80" y="0" fill="#f7c948" font-family="Arial, sans-serif" font-size="48" font-weight="bold">0</text>
+    <text x="0" y="0" fill="#ff6b35" font-family="Arial, sans-serif" font-size="72" font-weight="bold">7</text>
+    <text x="80" y="0" fill="#f7c948" font-family="Arial, sans-serif" font-size="48" font-weight="bold">0</text>
+    <text x="160" y="0" fill="#00d4ff" font-family="Arial, sans-serif" font-size="48" font-weight="bold">0</text>
+  </g>
+
+  <!-- Scan lines effect -->
+  <g opacity="0.02">
+    <line x1="0" y1="100" x2="1920" y2="100" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="200" x2="1920" y2="200" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="300" x2="1920" y2="300" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="400" x2="1920" y2="400" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="500" x2="1920" y2="500" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="600" x2="1920" y2="600" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="700" x2="1920" y2="700" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="800" x2="1920" y2="800" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="900" x2="1920" y2="900" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="1000" x2="1920" y2="1000" stroke="#fff" stroke-width="1"/>
+  </g>
+
+  <!-- Animated scanning line -->
+  <rect x="0" y="0" width="1920" height="2" fill="#00d4ff" opacity="0.15">
+    <animate attributeName="y" from="0" to="1080" dur="4s" repeatCount="indefinite"/>
+  </rect>
+</svg>

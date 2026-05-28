@@ -1,0 +1,44 @@
+{
+  "WCCM228N": {
+    "created_at": 1779866655.0406287,
+    "used_by": "testuser01",
+    "uses": 1,
+    "max_uses": 1
+  },
+  "462WXBVR": {
+    "created_at": 1779866655.0406551,
+    "used_by": null,
+    "uses": 0,
+    "max_uses": 1
+  },
+  "N5TS6YYH": {
+    "created_at": 1779866774.1466875,
+    "used_by": "wangyi",
+    "uses": 1,
+    "max_uses": 1
+  },
+  "LXPUQB6A": {
+    "created_at": 1779866774.1466937,
+    "used_by": "LIMI",
+    "uses": 1,
+    "max_uses": 1
+  },
+  "DGAMTLHH": {
+    "created_at": 1779866774.1466978,
+    "used_by": null,
+    "uses": 0,
+    "max_uses": 1
+  },
+  "Z7ZZZG4S": {
+    "created_at": 1779866774.1467016,
+    "used_by": null,
+    "uses": 0,
+    "max_uses": 1
+  },
+  "A5RFMPSN": {
+    "created_at": 1779866774.1467059,
+    "used_by": null,
+    "uses": 0,
+    "max_uses": 1
+  }
+}
