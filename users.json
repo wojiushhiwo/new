@@ -1,7 +1,7 @@
 {
   "admin": {
-    "hash": "6d5d0bdd231cc47607708d42dd3ae0934ad53a00a412efee60342296b2a84270",
-    "salt": "82afc3bad5e5f578",
+    "hash": "60d293b550e0174d3e258cde187f058561caaa1391e101e49eaea4c459766e21",
+    "salt": "bb2a08548a2ad901",
     "role": "super_admin"
   },
   "wangyi": {

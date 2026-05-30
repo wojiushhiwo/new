@@ -351,7 +351,7 @@ a:hover { text-decoration: underline; }
 .comment-input-wrap{display:flex;gap:6px;margin-top:8px}
 .comment-input{flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;background:#1a1c2a;color:#ccc;font-size:12px;outline:none;transition:border-color 0.2s}
 .comment-input:focus{border-color:var(--accent)}
-.comment-btn{padding:7px 14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:default;transition:opacity 0.2s}
+.comment-btn{padding:7px 14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:opacity 0.2s}
 .comment-btn:hover{opacity:0.85}
 .comment-login-link{font-size:12px;color:var(--accent);margin-top:6px;display:inline-block}
 .comment-empty{font-size:12px;color:var(--text-muted);padding:8px 0}
@@ -425,7 +425,7 @@ a:hover { text-decoration: underline; }
       </div>
 
       <div class="widget">
-        <h4>🔥 热门案例</h4>
+        <h4 style="display:flex;justify-content:space-between;align-items:center;">🔥 最新案例 <a href="/list.html" style="font-size:12px;color:var(--accent);font-weight:400;text-decoration:none;">查看全部 →</a></h4>
         <div id="hotCasesList">
           <div style="padding:8px 0;font-size:13px;color:#666;" class="loading">加载中...</div>
         </div>
@@ -514,6 +514,14 @@ async function loadStudios() {
 async function checkLogin() {
   try { var r = await fetch("/api/session"); var d = await r.json(); return d.user || null; }
   catch(e) { return null; }
+}
+
+function showHomeToast(msg) {
+  var t = document.createElement("div");
+  t.style.cssText = "position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#191c2c;border:1px solid #252840;color:#fff;padding:10px 24px;border-radius:10px;font-size:14px;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.4);transition:opacity 0.3s;";
+  t.innerHTML = msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.opacity="0"; setTimeout(function(){ t.remove(); },300); }, 3000);
 }
 
 function escHtml(t) {
@@ -609,7 +617,14 @@ function sdci(sid){
   var x=new XMLHttpRequest();
   x.open('POST','/api/comments',true);
   x.setRequestHeader('Content-Type','application/json');
-  x.onload=function(){if(x.status===200){inp.value='';loadComments(sid);}};
+  x.onload=function(){
+    if(x.status===200){inp.value='';loadComments(sid);}
+    else if(x.status===401||x.status===403){
+      showHomeToast('🔑 请先 <a href="/login" style="color:var(--accent);text-decoration:underline;">登录</a> 后再评论');
+    } else {
+      showHomeToast('❌ 评论发送失败，请重试');
+    }
+  };
   x.send(JSON.stringify({studio_id:sid,content:inp.value.trim()}));
 }
 
@@ -654,7 +669,7 @@ async function initHome() {
       list.innerHTML = '<p class="loading">还没收录案例</p>';
     } else {
       var recent = [].concat(STUDIOS).reverse().slice(0, 8);
-      list.innerHTML = recent.map(renderCard).join("");
+      list.innerHTML = recent.map(renderCard).join("") + '<div style="text-align:center;margin-top:8px;"><a href="/list.html" style="font-size:13px;color:var(--accent);text-decoration:none;font-weight:600;">查看全部 ' + STUDIOS.length + ' 条案例 →</a></div>';
       recent.forEach(function(s){loadComments(s.id);});
     }
   }
@@ -681,7 +696,7 @@ async function initHome() {
     if (STUDIOS.length === 0) {
       hot.innerHTML = '<div style="padding:8px 0;font-size:13px;color:#666;">暂无数据</div>';
     } else {
-      hot.innerHTML = [].concat(STUDIOS).slice(0, 5).map(function(s){
+      hot.innerHTML = [].concat(STUDIOS).sort(function(a,b){return (b.date||'').localeCompare(a.date||'')}).slice(0, 6).map(function(s){
         return '<div class="widget-item">' +
           '<div style="display:flex;justify-content:space-between;">' +
           '<span>' + escHtml(s.name) + '</span>' +
