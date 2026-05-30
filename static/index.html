@@ -553,13 +553,7 @@ function renderCard(s) {
   var srcIcon = "📝";
   if (s.source && s.source.indexOf("主播") >= 0) srcIcon = "🎙️";
   if (s.source && s.source.indexOf("管理员") >= 0) srcIcon = "🛡️";
-  var cmtInput = '';
-  if (CURRENT_USER) {
-    cmtInput = '<div class="comment-input-wrap"><input type="text" class="comment-input" id="ci_'+s.id+'" placeholder="写评论..." data-sid="'+s.id+'"><button class="comment-btn" data-sid="'+s.id+'">发送</button></div>';
-  } else {
-    cmtInput = '<a href="/login" class="comment-login-link">🔑 登录后可评论</a>';
-  }
-  return '<div class="card">' +
+  return '<div class="card" style="cursor:pointer;" onclick="location.href=\'/studio/'+s.id+'\'">' +
     '<span class="tag ' + risk.cls + '">' + risk.text + '</span>' +
     '<h3>' + escHtml(s.name) + '</h3>' +
     '<p>' + escHtml(s.detail) + '</p>' +
@@ -567,8 +561,7 @@ function renderCard(s) {
       (s.platform ? '<span>📱 ' + escHtml(s.platform) + '</span>' : '') +
       '<span>📅 ' + formatDate(s.date) + '</span>' +
       '<span class="src">' + srcIcon + ' ' + escHtml(s.source || "用户投稿") + '</span>' +
-    '</div>' +
-    '<div class="comment-section"><div class="comment-header"><span>💬 评论</span><span class="comment-badge" id="cb-'+s.id+'"></span></div><div id="comments-'+s.id+'"><div class="comment-empty">加载评论...</div></div>'+cmtInput+'</div></div>';
+    '</div></div>';
 }
 
 // Search
