@@ -265,6 +265,13 @@
     var STUDIO_DATA = null;
     var STUDIO_ID = null;
 
+    function showToast(msg) {
+      var t = document.createElement("div");
+      t.style.cssText = "position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#191c2c;border:1px solid #252840;color:#fff;padding:10px 24px;border-radius:10px;font-size:14px;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.4);transition:opacity 0.3s;";
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(function(){ t.style.opacity="0"; setTimeout(function(){ t.remove(); },300); }, 3000);
+    }
     function escHtml(t) {
       var d = document.createElement("div");
       d.textContent = t || "";
@@ -427,10 +434,10 @@
           inp.value = "";
           loadComments();
         } else {
-          alert("评论发送失败");
+          showToast("❌ 评论发送失败");
         }
       };
-      x.onerror = function() { alert("网络错误"); };
+      x.onerror = function() { showToast("❌ 网络错误"); };
       x.send(JSON.stringify({studio_id: STUDIO_ID, content: inp.value.trim()}));
     }
 

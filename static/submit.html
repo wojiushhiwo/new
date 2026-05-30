@@ -104,6 +104,13 @@
   
   <script src="js/app.js?v=1779902000"></script>
 <script>
+function showToast(msg, isError) {
+  var t = document.createElement("div");
+  t.style.cssText = "position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:"+(isError?"#3a1a1a":"#191c2c")+";border:1px solid "+(isError?"rgba(255,59,48,0.3)":"#252840")+";color:#fff;padding:10px 24px;border-radius:10px;font-size:14px;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.4);transition:opacity 0.3s;";
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.opacity="0"; setTimeout(function(){ t.remove(); },300); }, 3000);
+}
 (function(){
   var form = document.getElementById("reportForm");
   var success = document.getElementById("submitSuccess");
@@ -125,8 +132,8 @@
       if (radios[i].checked) { risk = radios[i].value; break; }
     }
 
-    if (!name) { alert("请填写工作室名称"); return; }
-    if (!detail) { alert("请填写详细经过"); return; }
+    if (!name) { showToast("❌ 请填写工作室名称", true); return; }
+    if (!detail) { showToast("❌ 请填写详细经过", true); return; }
 
     var btn = form.querySelector(".btn-submit");
     btn.disabled = true;
@@ -144,16 +151,16 @@
       } else {
         try {
           var d = JSON.parse(xhr.responseText);
-          alert(d.error || "提交失败，请稍后重试");
+          showToast("❌ " + (d.error || "提交失败，请稍后重试"), true);
         } catch(e) {
-          alert("提交失败，请稍后重试");
+          showToast("❌ 提交失败，请稍后重试", true);
         }
       }
     };
     xhr.onerror = function() {
       btn.disabled = false;
       btn.textContent = "提交曝光";
-      alert("网络错误，请稍后重试");
+      showToast("❌ 网络错误，请稍后重试", true);
     };
     xhr.send(JSON.stringify({
       name: name,
