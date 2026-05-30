@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>工作室详情 · 跑刀避雷指南</title>
+  <meta name="description" content="三角洲行动跑刀工作室详情评价页">
+  <link rel="icon" type="image/svg+xml" href="/static/img/logo.svg">
+  <link rel="stylesheet" href="/static/css/style.css?v=1779901786">
+  <style>
+    .detail-page { max-width: 720px; margin: 0 auto; padding: 20px 16px 60px; }
+    .detail-card {
+      background: var(--bg-card, #191c2c);
+      border: 1px solid var(--border, #252840);
+      border-radius: 14px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+    }
+    .detail-card .card-name {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text, #e0e0e0);
+    }
+    .detail-card .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .detail-card .card-detail {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-secondary, #aab);
+      margin-bottom: 18px;
+      white-space: pre-wrap;
+    }
+    .detail-card .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      font-size: 0.88rem;
+      color: var(--text-muted, #777);
+      padding: 14px 0;
+      border-top: 1px solid var(--border-light, #2a2e44);
+    }
+    .detail-card .card-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .detail-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 16px;
+      background: var(--border, #252840);
+      color: var(--text-secondary, #aab);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      text-decoration: none;
+      margin-bottom: 20px;
+      transition: background 0.2s;
+    }
+    .detail-back:hover {
+      background: var(--border-light, #2a2e44);
+      color: var(--text, #e0e0e0);
+    }
+    .studio-loading {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted, #777);
+      font-size: 0.95rem;
+    }
+    .studio-error {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--danger, #FF3B30);
+      font-size: 1rem;
+    }
+    .detail-comments-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text, #e0e0e0);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .detail-comment-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-light, #2a2e44);
+      font-size: 0.9rem;
+      color: var(--text-secondary, #aab);
+    }
+    .detail-comment-item:last-child {
+      border-bottom: none;
+    }
+    .detail-comment-user {
+      font-weight: 600;
+      color: var(--accent, #FF7D29);
+    }
+    .detail-comment-admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      margin-left: 4px;
+      padding: 1px 6px;
+      background: var(--accent, #FF7D29);
+      color: #fff;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      vertical-align: middle;
+    }
+    .detail-comment-date {
+      color: var(--text-muted, #555);
+      font-size: 0.78rem;
+      float: right;
+    }
+    .detail-comment-input {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .detail-comment-input input {
+      flex: 1;
+      padding: 10px 14px;
+      background: var(--bg, #141822);
+      border: 1px solid var(--border, #252840);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      color: var(--text, #e0e0e0);
+      outline: none;
+    }
+    .detail-comment-input input:focus {
+      border-color: var(--accent, #FF7D29);
+    }
+    .detail-comment-input button {
+      padding: 10px 20px;
+      background: var(--accent, #FF7D29);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .detail-comment-input button:hover {
+      opacity: 0.85;
+    }
+    .detail-login-hint {
+      font-size: 0.85rem;
+      color: var(--text-muted, #888);
+      margin-top: 12px;
+    }
+    .detail-login-hint a {
+      color: var(--accent, #FF7D29);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      margin-left: 8px;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .tag-platinum { background: #FFD70022; color: #FFD700; border: 1px solid #FFD70044; }
+    .tag-gold { background: #FF950022; color: #FF9500; border: 1px solid #FF950044; }
+    .tag-silver { background: #C0C0C022; color: #C0C0C0; border: 1px solid #C0C0C044; }
+    .risk-safe { color: #2ECC71; background: #2ECC7111; border: 1px solid #2ECC7133; }
+    .risk-warning { color: #FF9500; background: #FF950011; border: 1px solid #FF950033; }
+    .risk-danger { color: #FF3B30; background: #FF3B3011; border: 1px solid #FF3B3033; }
+    .risk-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    /* Dark style for the detail page to match existing theme */
+    body {
+      background: var(--bg, #141822);
+      color: var(--text, #e0e0e0);
+    }
+    .header {
+      background: var(--bg-nav, rgba(20,22,34,0.92));
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border, #252840);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .header nav a {
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      font-size: 0.82rem;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    .header nav a:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.06);
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <nav>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:1rem;font-weight:700;color:rgba(255,255,255,0.9);">🔪 跑刀避雷指南</span>
+        <a href="/">🏠 首页</a>
+        <a href="/list.html">📋 列表</a>
+        <span id="navLogin"></span>
+      </nav>
+    </div>
+  </header>
+
+  <div class="detail-page container">
+    <a href="javascript:history.back()" class="detail-back">← 返回</a>
+    <div id="studioDetail"></div>
+    <div id="studioComments">
+      <div class="detail-comments-title">💬 评论</div>
+      <div id="commentList" style="border:1px solid var(--border,#252840);border-radius:12px;padding:16px 20px;background:var(--bg-card,#191c2c);">
+        <p style="color:var(--text-muted,#777);text-align:center;padding:20px 0;">加载中...</p>
+      </div>
+      <div id="commentInputArea" style="display:none;margin-top:12px;">
+        <div class="detail-comment-input">
+          <input type="text" id="commentInput" placeholder="写评论..." maxlength="200">
+          <button onclick="submitComment()">发送</button>
+        </div>
+      </div>
+      <div id="commentLoginHint" style="display:none;" class="detail-login-hint">
+        🔒 <a href="/login">登录后可以评论</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var CURRENT_USER = null;
+    var STUDIO_DATA = null;
+    var STUDIO_ID = null;
+
+    function escHtml(t) {
+      var d = document.createElement("div");
+      d.textContent = t || "";
+      return d.innerHTML;
+    }
+
+    function formatDate(d) {
+      if (!d) return "-";
+      return d.replace(/(\d{4})-(\d{2})-(\d{2}).*/, "$1.$2.$3") || d;
+    }
+
+    // === Navigation check ===
+    async function checkLogin() {
+      try {
+        var r = await fetch("/api/session");
+        var d = await r.json();
+        CURRENT_USER = d.user || null;
+        var navEl = document.getElementById("navLogin");
+        if (navEl) {
+          if (CURRENT_USER) {
+            navEl.innerHTML =
+              '<span class="nav-user-wrap" style="padding:6px 8px;"><span class="nav-user-icon">👤</span><span style="color:rgba(255,255,255,0.8);font-size:0.82rem;">' + escHtml(CURRENT_USER) + '</span></span>' +
+              '<a href="/logout" style="color:rgba(255,255,255,0.5);">🚪</a>';
+          } else {
+            navEl.innerHTML = '<a href="/login" style="padding:6px 12px;">🔑 登录</a>';
+          }
+        }
+        return CURRENT_USER;
+      } catch(e) { CURRENT_USER = null; return null; }
+    }
+
+    // === Load studio data ===
+    async function loadStudio() {
+      var el = document.getElementById("studioDetail");
+      if (!el) return;
+
+      // Get studio id from URL
+      var pathParts = window.location.pathname.split("/");
+      STUDIO_ID = pathParts[pathParts.length - 1];
+      if (!STUDIO_ID) {
+        el.innerHTML = '<div class="studio-error">❌ 无效的工作室ID</div>';
+        return;
+      }
+
+      try {
+        var r = await fetch("/api/studios");
+        var d = await r.json();
+        var studios = d.studios || [];
+        STUDIO_DATA = studios.filter(function(s){ return s.id === STUDIO_ID; })[0];
+
+        if (!STUDIO_DATA) {
+          el.innerHTML = '<div class="studio-error">❌ 未找到该工作室</div>';
+          return;
+        }
+
+        // Render studio detail
+        renderStudio(STUDIO_DATA);
+        // Load comments
+        loadComments();
+        // Check login for comment input
+        await checkLogin();
+        toggleCommentInput();
+      } catch(e) {
+        el.innerHTML = '<div class="studio-error">❌ 加载失败，请稍后重试</div>';
+      }
+    }
+
+    function renderStudio(s) {
+      var el = document.getElementById("studioDetail");
+
+      var riskLabels = {
+        safe: {text:"✅ 安全", cls:"risk-safe"},
+        warning: {text:"⚠️ 存疑", cls:"risk-warning"},
+        danger: {text:"❌ 避雷", cls:"risk-danger"}
+      };
+      var risk = riskLabels[s.risk] || riskLabels.danger;
+
+      var levelMap = {
+        platinum: {icon:"🥇", label:"金牌"},
+        gold: {icon:"🥉", label:"黄牌"},
+        silver: {icon:"🥈", label:"银牌"}
+      };
+      var badge = "";
+      if (s.level && levelMap[s.level]) {
+        var lv = levelMap[s.level];
+        badge = '<span class="level-badge ' + lv.cls + '">' + lv.icon + ' ' + lv.label + '</span>';
+      }
+
+      var contactHtml = "";
+      if (s.contact && s.contact_hidden) {
+        contactHtml = '<span>🔒 <a href="/login" style="color:#4a6cf7;">登录后查看联系方式</a></span>';
+      } else if (s.contact) {
+        contactHtml = '<span>🔗 ' + escHtml(s.contact) + '</span>';
+      }
+
+      el.innerHTML =
+        '<div class="detail-card">' +
+          '<div class="card-header">' +
+            '<div><span class="card-name">' + escHtml(s.name) + '</span>' + badge + '</div>' +
+            '<span class="risk-label ' + risk.cls + '">' + risk.text + '</span>' +
+          '</div>' +
+          '<div class="card-detail">' + escHtml(s.detail) + '</div>' +
+          '<div class="card-meta">' +
+            (s.platform ? '<span>📱 ' + escHtml(s.platform) + '</span>' : '') +
+            (s.contact ? contactHtml : '') +
+            '<span>📅 ' + formatDate(s.date) + '</span>' +
+            '<span>📝 ' + escHtml(s.source) + '</span>' +
+          '</div>' +
+        '</div>';
+
+      // Update page title
+      document.title = escHtml(s.name) + ' · 跑刀避雷指南';
+    }
+
+    // === Comments ===
+    async function loadComments() {
+      var el = document.getElementById("commentList");
+      if (!el) return;
+      try {
+        var r = await fetch("/api/studios/" + STUDIO_ID + "/comments");
+        var d = await r.json();
+        var comments = d.comments || [];
+        if (comments.length === 0) {
+          el.innerHTML = '<p style="color:var(--text-muted,#777);text-align:center;padding:20px 0;">暂无评论，来写第一条吧 ✍️</p>';
+        } else {
+          el.innerHTML = comments.map(function(c) {
+            var badge = c.is_admin ? '<span class="detail-comment-admin-badge">🛡️ 管理员</span>' : "";
+            return '<div class="detail-comment-item">' +
+              '<span class="detail-comment-user">' + escHtml(c.user) + '</span>' + badge +
+              '<span class="detail-comment-date">' + (c.date||"") + '</span>' +
+              '<div style="margin-top:4px;">' + escHtml(c.content) + '</div>' +
+              '</div>';
+          }).join("");
+        }
+      } catch(e) {
+        el.innerHTML = '<p style="color:var(--danger,#FF3B30);text-align:center;padding:20px 0;">评论加载失败</p>';
+      }
+    }
+
+    function toggleCommentInput() {
+      var inputArea = document.getElementById("commentInputArea");
+      var loginHint = document.getElementById("commentLoginHint");
+      if (CURRENT_USER) {
+        inputArea.style.display = "block";
+        loginHint.style.display = "none";
+      } else {
+        inputArea.style.display = "none";
+        loginHint.style.display = "block";
+      }
+    }
+
+    function submitComment() {
+      var inp = document.getElementById("commentInput");
+      if (!inp || !inp.value.trim()) return;
+      var x = new XMLHttpRequest();
+      x.open("POST", "/api/comments", true);
+      x.setRequestHeader("Content-Type", "application/json");
+      x.onload = function() {
+        if (x.status === 200) {
+          inp.value = "";
+          loadComments();
+        } else {
+          alert("评论发送失败");
+        }
+      };
+      x.onerror = function() { alert("网络错误"); };
+      x.send(JSON.stringify({studio_id: STUDIO_ID, content: inp.value.trim()}));
+    }
+
+    // === Init ===
+    loadStudio();
+  </script>
+</body>
+</html>

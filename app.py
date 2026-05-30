@@ -280,6 +280,10 @@ def fenghao_page():
 def about_page():
     return send_from_directory(STATIC_DIR, "about.html")
 
+@app.route("/studio/<studio_id>")
+def studio_detail_page(studio_id):
+    return send_from_directory(STATIC_DIR, "studio.html")
+
 @app.route("/css/<path:filename>")
 def css(filename):
     return send_from_directory(os.path.join(STATIC_DIR, "css"), filename)
@@ -988,4 +992,4 @@ def api_user_comments():
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    app.run(host="127.0.0.1", port=8080, debug=False)

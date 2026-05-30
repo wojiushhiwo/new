@@ -65,7 +65,7 @@ function renderCard(s) {
   var favStar = "";
   if (CURRENT_USER) {
     var isFav = USER_FAVORITES.indexOf(s.id) >= 0;
-    favStar = "<span class=\"fav-btn\" style=\"cursor:pointer;font-size:1.1rem;margin-left:8px;\" onclick=\"toggleFav('" + s.id + "')\" title=\"" + (isFav ? "\u53d6\u6d88\u6536\u85cf" : "\u6536\u85cf") + "\">" + (isFav ? "\u2605" : "\u2606") + "</span>";
+    favStar = "<span class=\"fav-btn\" style=\"cursor:pointer;font-size:1.1rem;margin-left:8px;position:relative;z-index:2;\" onclick=\"event.stopPropagation();toggleFav('" + s.id + "')\" title=\"" + (isFav ? "\u53d6\u6d88\u6536\u85cf" : "\u6536\u85cf") + "\">" + (isFav ? "\u2605" : "\u2606") + "</span>";
   }
   var contactHtml = "";
   if (s.contact && s.contact_hidden) {
@@ -73,7 +73,7 @@ function renderCard(s) {
   } else if (s.contact) {
     contactHtml = "<span>\ud83d\udd17 " + escHtml(s.contact) + "</span>";
   }
-  return "<div class=\"card\" style=\"position:relative;\">" +
+  return "<div class=\"card\" style=\"position:relative;cursor:pointer;\" onclick=\"location.href='/studio/" + s.id + "'\">" +
     "<div class=\"card-header\"><span class=\"card-name\">" + escHtml(s.name) + badge + favStar + "</span><span class=\"card-risk " + risk.cls + "\">" + risk.text + "</span></div>" +
     "<div class=\"card-detail\">" + escHtml(s.detail) + "</div>" +
     "<div class=\"card-meta\">" +
@@ -81,12 +81,6 @@ function renderCard(s) {
       contactHtml +
       "<span>\ud83d\udcc5 " + formatDate(s.date) + "</span>" +
       "<span>\ud83d\udcdd " + escHtml(s.source) + "</span>" +
-    "</div>" +
-    "<div class=\"comment-section\" style=\"margin-top:10px;padding-top:10px;border-top:1px solid #f0f2f5;\">" +
-      "<div class=\"comment-list\" id=\"comments-" + s.id + "\"><span style=\"font-size:0.78rem;color:#8a8aaa;\">\ud83d\udcac \u52a0\u8f7d\u8bc4\u8bba...</span></div>" +
-      (CURRENT_USER
-        ? "<div style=\"margin-top:6px;display:flex;gap:6px;\"><input type=\"text\" id=\"ci_" + s.id + "\" placeholder=\"\u5199\u8bc4\u8bba...\" style=\"flex:1;padding:6px 10px;border:1px solid #ddd;border-radius:8px;font-size:0.82rem;outline:none;\"><button onclick=\"sdci('" + s.id + "')\" style=\"padding:6px 14px;background:#4a6cf7;color:#fff;border:none;border-radius:8px;font-size:0.82rem;cursor:pointer;\">\u53d1\u9001</button></div>"
-        : "<a href=\"/login\" style=\"font-size:0.78rem;color:#4a6cf7;\">\ud83d\udd11 \u767b\u5f55\u540e\u53ef\u4ee5\u8bc4\u8bba</a>") +
     "</div></div>";
 }
 
@@ -171,7 +165,7 @@ function doSearch() {
   modal.style.display = "flex";
 }
 function showStudioDetail(studioId) {
-  window.location.href = "/list.html?detail=" + encodeURIComponent(studioId);
+  window.location.href = "/studio/" + encodeURIComponent(studioId);
 }
 function closeSearch() {
   var modal = document.getElementById("searchModal");
