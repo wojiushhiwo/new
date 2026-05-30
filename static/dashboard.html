@@ -7,6 +7,36 @@
   <meta name="description" content="个人中心 - 查看我的投稿、评论和收藏">
   <link rel="stylesheet" href="css/style.css">
   <style>
+    :root {
+      --bg: #141822;
+      --bg-card: #191c2c;
+      --border: #1e2030;
+      --border-light: #252840;
+      --text: #e0e0e0;
+      --text-secondary: #8888aa;
+      --text-muted: #666;
+      --accent: #FF7D29;
+      --blue: #165DFF;
+      --safe: #2ECC71;
+      --danger: #FF3B30;
+      --warn: #FF9500;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; margin:0; }
+    a { color: var(--accent); }
+    a:hover { text-decoration: underline; }
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(20,22,34,0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-light);
+    }
+    .nav-links { display: flex; gap: 2px; }
+    .nav-link {
+      padding: 6px 14px; border-radius: 20px; font-size: 13px;
+      color: rgba(255,255,255,0.55); font-weight: 500; transition: 0.2s;
+    }
+    .nav-link:hover { color: #fff; text-decoration: none; background: rgba(255,255,255,0.06); }
     .dashboard-wrap { max-width: 960px; margin: 0 auto; padding: 30px 20px; }
     .dash-header {
       background: linear-gradient(135deg, #0d0e1a 0%, #1a1c2c 100%);
@@ -67,8 +97,8 @@
 </head>
 <body>
   <nav class="navbar">
-    <div class="nav-container">
-      <a href="/" class="nav-brand">🔪 <span class="nav-brand-text">避雷指南</span></a>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;height:56px;">
+      <a href="/" style="font-size:17px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;">🔪 避雷指南</a>
       <div class="nav-links" id="navLinks">
         <a href="/" class="nav-link">🏠 首页</a>
         <a href="/list.html" class="nav-link">📋 黑名单</a>
