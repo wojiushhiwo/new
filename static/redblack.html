@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>俱乐部红黑榜 · 管理后台</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="/static/img/logo.svg">
+<style>
+:root { --primary: #4a6cf7; --secondary: #ffd700; --accent: #FF7D29; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #0d0e1a;
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+/* Layout */
+.admin-layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 220px;
+  background: #0a0b14;
+  border-right: 1px solid #1e2030;
+  padding: 20px 0;
+  flex-shrink: 0;
+}
+.sidebar .brand { padding: 0 18px 16px; font-size: 15px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #1e2030; margin-bottom: 12px; }
+.sidebar .brand small { font-size: 10px; color: #555; font-weight: 400; }
+.sidebar-item { padding: 10px 18px; font-size: 13px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 8px; border-left: 3px solid transparent; cursor: default; }
+.sidebar-item.active { color: #fff; background: rgba(255,125,41,0.08); border-left-color: #FF7D29; }
+.sidebar-item.highlight { color: #FF7D29; font-weight: 600; }
+.sidebar-divider { height: 1px; background: #1e2030; margin: 8px 16px; }
+.main-area { flex: 1; padding: 24px 28px; max-width: 1200px; }
+
+/* Header bar */
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.top-bar h1 { font-size: 20px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+.top-bar .user-info { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #888; }
+.top-bar .user-info .name { color: #FF7D29; font-weight: 600; }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: #191c2c; border-radius: 10px; border: 1px solid #252840; padding: 14px; text-align: center; }
+.stat-card .num { font-size: 24px; font-weight: 700; color: #fff; }
+.stat-card .num.green { color: #2ECC71; }
+.stat-card .num.red { color: #FF3B30; }
+.stat-card .num.orange { color: #FF9500; }
+.stat-card .label { font-size: 11px; color: #777; margin-top: 2px; }
+
+/* Filters */
+.filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-btn { padding: 6px 14px; border: 1px solid #2e3248; background: transparent; border-radius: 8px; font-size: 12px; color: #888; cursor: default; }
+.filter-btn.active { background: rgba(255,125,41,0.15); border-color: #FF7D29; color: #FF7D29; }
+.filter-btn.green.active { background: rgba(46,204,113,0.15); border-color: #2ECC71; color: #2ECC71; }
+.filter-btn.red.active { background: rgba(255,59,48,0.15); border-color: #FF3B30; color: #FF3B30; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 10px 12px; font-size: 11px; color: #7777aa; border-bottom: 1px solid #1e2030; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+td { padding: 10px 12px; font-size: 13px; color: #ccc; border-bottom: 1px solid #1a1c2a; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+.badge { display: inline-flex; align-items: center; gap: 2px; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+.badge-gold { background: linear-gradient(135deg,#B8860B,#FFD700); color: #1a1a1a; }
+.badge-silver { background: linear-gradient(135deg,#6c7a89,#bdc3c7); color: #1a1a1a; }
+.badge-bronze { background: linear-gradient(135deg,#8B4513,#D2691E); color: #fff; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+.tag-danger { background: rgba(255,59,48,0.2); color: #FF3B30; }
+.tag-warning { background: rgba(255,149,0,0.2); color: #FF9500; }
+.tag-safe { background: rgba(52,199,89,0.2); color: #34C759; }
+.tag-source { background: rgba(90,100,180,0.15); color: #8a98d0; }
+.tag-pending { background: rgba(255,149,0,0.15); color: #FF9500; }
+.action-btn { color: #4a6cf7; cursor: default; margin: 0 4px; font-size: 12px; }
+.action-btn.danger { color: #FF3B30; }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.active { display: flex; }
+.modal { background: #191c2c; border-radius: 12px; border: 1px solid #2a2d44; width: 100%; max-width: 520px; max-height: 80vh; overflow-y: auto; }
+.modal-header { padding: 16px 20px; border-bottom: 1px solid #252840; display: flex; justify-content: space-between; align-items: center; }
+.modal-header h3 { font-size: 15px; font-weight: 600; color: #fff; }
+.modal-close { background: none; border: none; color: #666; font-size: 18px; cursor: default; }
+.modal-body { padding: 20px; }
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 12px; font-weight: 600; color: #999; margin-bottom: 4px; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 8px 12px; background: #12142a; border: 1px solid #2a2d44; border-radius: 6px; color: #eee; font-size: 13px; outline: none; font-family: inherit;
+}
+.form-group textarea { resize: vertical; min-height: 60px; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #FF7D29; }
+.btn-primary { padding: 8px 20px; background: #FF7D29; color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: default; }
+.btn-outline { padding: 6px 14px; background: transparent; border: 1px solid #3d4158; color: #888; border-radius: 6px; font-size: 12px; cursor: default; }
+.btn-danger { padding: 6px 14px; background: rgba(255,59,48,0.2); border: 1px solid rgba(255,59,48,0.3); color: #FF3B30; border-radius: 6px; font-size: 12px; cursor: default; }
+.btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+/* Role badge in modal */
+.role-info { font-size: 11px; color: #666; margin-top: 4px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-layout { flex-direction: column; }
+  .sidebar { width: 100%; padding: 10px 0; border-right: none; border-bottom: 1px solid #1e2030; }
+  .stats { grid-template-columns: repeat(3, 1fr); }
+  .main-area { padding: 16px; }
+  table { font-size: 12px; }
+  th, td { padding: 6px 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="brand">🔪 避雷后台 <small>v2.0</small></div>
+    <div class="sidebar-item">📊 仪表盘</div>
+    <div class="sidebar-item">📝 文章管理</div>
+    <div class="sidebar-item">📮 投稿审核</div>
+    <div class="sidebar-item">💬 评论管理</div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-item highlight active">🏆 俱乐部红黑榜</div>
+    <div style="padding: 2px 18px 10px 18px; font-size: 11px; color: rgba(255,125,41,0.4);">仅 super_admin / redblack_admin</div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-item">👥 管理员权限</div>
+    <div class="sidebar-item">👤 用户管理</div>
+    <div class="sidebar-item">⚙️ 网站设置</div>
+  </div>
+
+  <!-- Main -->
+  <div class="main-area">
+    <!-- Top bar -->
+    <div class="top-bar">
+      <h1>🏆 俱乐部红黑榜管理</h1>
+      <div class="user-info">
+        <span>当前用户：<span class="name" id="currentUser">-</span></span>
+        <span class="sidebar-item" style="display:inline;padding:0;border:none;color:#4a6cf7;cursor:default;" onclick="window.location='/'">← 返回前台</span>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats" id="statsRow">
+      <div class="stat-card"><div class="num" id="totalCount">-</div><div class="label">总工作室</div></div>
+      <div class="stat-card"><div class="num green" id="redCount">-</div><div class="label">红榜（推荐）</div></div>
+      <div class="stat-card"><div class="num red" id="blackCount">-</div><div class="label">黑榜（避雷）</div></div>
+      <div class="stat-card"><div class="num orange" id="warnCount">-</div><div class="label">存疑</div></div>
+      <div class="stat-card"><div class="num" id="pendingCount">-</div><div class="label">待审核</div></div>
+    </div>
+
+    <!-- Operations -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div class="filter-bar" style="margin-bottom:0;">
+        <span class="filter-btn active" data-filter="all" onclick="applyFilter('all',this)">全部</span>
+        <span class="filter-btn green" data-filter="safe" onclick="applyFilter('safe',this)">🟢 红榜</span>
+        <span class="filter-btn red" data-filter="danger" onclick="applyFilter('danger',this)">🔴 黑榜</span>
+        <span class="filter-btn" data-filter="warning" onclick="applyFilter('warning',this)">🟡 存疑</span>
+        <span class="filter-btn" data-filter="pending" onclick="applyFilter('pending',this)">⏳ 待审核</span>
+      </div>
+      <div>
+        <button class="btn-primary" onclick="showAddModal()">+ 新增工作室</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30px;">#</th>
+            <th>工作室</th>
+            <th>平台</th>
+            <th>状态</th>
+            <th>认证</th>
+            <th>来源</th>
+            <th>日期</th>
+            <th style="width:100px;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="studioTableBody">
+          <tr><td colspan="8" style="text-align:center;color:#666;padding:30px;">加载中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pending reviews section -->
+    <h3 style="font-size:14px;font-weight:600;color:#FF9500;margin:24px 0 10px;">⏳ 待审核投稿</h3>
+    <div id="pendingList">
+      <p style="color:#666;font-size:13px;">加载中...</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">新增工作室</h3>
+      <span class="modal-close" onclick="closeModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="form-group">
+        <label>工作室名称 *</label>
+        <input type="text" id="editName" placeholder="比如：雷霆护航">
+      </div>
+      <div class="form-group">
+        <label>平台</label>
+        <select id="editPlatform">
+          <option value="">选择平台</option>
+          <option value="闲鱼">闲鱼</option>
+          <option value="抖音">抖音</option>
+          <option value="B站">B站</option>
+          <option value="QQ">QQ</option>
+          <option value="微信">微信</option>
+          <option value="贴吧">贴吧</option>
+          <option value="其他">其他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>风险评估</label>
+        <select id="editRisk">
+          <option value="safe">🟢 安全（红榜）</option>
+          <option value="warning">🟡 存疑</option>
+          <option value="danger">🔴 避雷（黑榜）</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>认证等级</label>
+        <select id="editLevel">
+          <option value="">无认证</option>
+          <option value="platinum">🥇 金牌</option>
+          <option value="gold">🥈 银牌</option>
+          <option value="silver">🥉 黄牌</option>
+        </select>
+        <div class="role-info">三层认证对应：金牌(全绿反馈)、银牌(多数正面)、黄牌(存疑观察)</div>
+      </div>
+      <div class="form-group">
+        <label>联系方式（选填）</label>
+        <input type="text" id="editContact" placeholder="闲鱼ID/抖音号/微信号">
+      </div>
+      <div class="form-group">
+        <label>详细说明</label>
+        <textarea id="editDetail" placeholder="描述工作室的具体情况…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>来源依据</label>
+        <select id="editSource">
+          <option value="管理员录入">管理员录入</option>
+          <option value="玩家投稿">玩家投稿</option>
+          <option value="主播测评">主播测评</option>
+          <option value="多来源核实">多来源核实</option>
+        </select>
+      </div>
+      <div class="btn-row">
+        <span class="btn-outline" onclick="closeModal()">取消</span>
+        <span class="btn-primary" onclick="saveStudio()">保存</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal" style="max-width:360px;">
+    <div class="modal-header">
+      <h3>⚠️ 确认删除</h3>
+      <span class="modal-close" onclick="document.getElementById('deleteModal').classList.remove('active')">✕</span>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:#ccc;margin-bottom:16px;">确定要删除 <strong id="deleteName" style="color:#FF7D29;"></strong> 吗？此操作不可撤销。</p>
+      <div class="btn-row">
+        <span class="btn-outline" onclick="document.getElementById('deleteModal').classList.remove('active')">取消</span>
+        <span class="btn-danger" onclick="confirmDelete()">确认删除</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 红黑榜管理页面 JS
+// ============================================================
+
+var STUDIOS = [];
+var CURRENT_USER = null;
+var DELETE_ID = null;
+var FILTER = "all";
+
+const RISK_MAP = {
+  safe: {text:"🟢 红榜", cls:"tag-safe"},
+  warning: {text:"🟡 存疑", cls:"tag-warning"},
+  danger: {text:"🔴 黑榜", cls:"tag-danger"}
+};
+const LEVEL_MAP = {
+  "platinum": {icon:"🥇", label:"金牌", cls:"badge-gold"},
+  "gold": {icon:"🥈", label:"银牌", cls:"badge-silver"},
+  "silver": {icon:"🥉", label:"黄牌", cls:"badge-bronze"}
+};
+
+async function api(path, opts) {
+  try {
+    var r = await fetch(path, opts || {});
+    var d = await r.json();
+    return d;
+  } catch(e) { return null; }
+}
+
+async function checkAccess() {
+  var sess = await api("/api/session");
+  if (!sess || !sess.user) { window.location.href = "/login"; return null; }
+  document.getElementById("currentUser").textContent = sess.user;
+  return sess.user;
+}
+
+async function loadData() {
+  var d = await api("/api/redblack");
+  if (d && d.studios) STUDIOS = d.studios;
+  else STUDIOS = [];
+  renderTable();
+}
+
+function getFilteredData() {
+  if (FILTER === "all") return STUDIOS;
+  if (FILTER === "pending") return STUDIOS.filter(function(s){ return s.status === "pending"; });
+  return STUDIOS.filter(function(s){ return s.risk === FILTER && s.status !== "pending"; });
+}
+
+function renderTable() {
+  // Stats
+  var total = STUDIOS.length;
+  var red = STUDIOS.filter(function(s){ return s.risk === "safe" && s.status !== "pending"; }).length;
+  var black = STUDIOS.filter(function(s){ return s.risk === "danger" && s.status !== "pending"; }).length;
+  var warn = STUDIOS.filter(function(s){ return s.risk === "warning" && s.status !== "pending"; }).length;
+  var pending = STUDIOS.filter(function(s){ return s.status === "pending"; }).length;
+  document.getElementById("totalCount").textContent = total;
+  document.getElementById("redCount").textContent = red;
+  document.getElementById("blackCount").textContent = black;
+  document.getElementById("warnCount").textContent = warn;
+  document.getElementById("pendingCount").textContent = pending;
+
+  // Table
+  var tbody = document.getElementById("studioTableBody");
+  var data = getFilteredData();
+  if (data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#666;padding:30px;">暂无数据</td></tr>';
+  } else {
+    tbody.innerHTML = data.map(function(s, i){
+      var risk = RISK_MAP[s.risk] || RISK_MAP.danger;
+      var badge = "";
+      if (s.level && LEVEL_MAP[s.level]) {
+        var lv = LEVEL_MAP[s.level];
+        badge = '<span class="badge ' + lv.cls + '">' + lv.icon + ' ' + lv.label + '</span>';
+      }
+      var statusTag = "";
+      if (s.status === "pending") {
+        statusTag = '<span class="tag tag-pending">⏳ 待审核</span>';
+      } else {
+        statusTag = '<span class="tag ' + risk.cls + '">' + risk.text + '</span>';
+      }
+      var srcIcon = "📝";
+      if (s.source && s.source.indexOf("主播") >= 0) srcIcon = "🎙️";
+      else if (s.source && s.source.indexOf("管理员") >= 0) srcIcon = "🛡️";
+      return '<tr>' +
+        '<td style="color:#666;">' + (i+1) + '</td>' +
+        '<td style="color:#fff;font-weight:600;">' + escHtml(s.name) + '</td>' +
+        '<td>' + escHtml(s.platform || "-") + '</td>' +
+        '<td>' + statusTag + '</td>' +
+        '<td>' + badge + '</td>' +
+        '<td><span class="tag tag-source">' + srcIcon + " " + escHtml(s.source || "用户投稿") + '</span></td>' +
+        '<td style="color:#888;font-size:12px;">' + (s.date || "-") + '</td>' +
+        '<td>' +
+          '<span class="action-btn" onclick="showEditModal(\'' + s.id + '\')">✏️</span>' +
+          '<span class="action-btn danger" onclick="showDeleteModal(\'' + s.id + '\',\'' + escHtml(s.name).replace(/'/g, "\\'") + '\')">🗑️</span>' +
+        '</td></tr>';
+    }).join("");
+  }
+
+  // Pending section
+  var pendingData = STUDIOS.filter(function(s){ return s.status === "pending"; });
+  var pendingEl = document.getElementById("pendingList");
+  if (pendingData.length === 0) {
+    pendingEl.innerHTML = '<p style="color:#666;font-size:13px;">暂无待审核投稿</p>';
+  } else {
+    pendingEl.innerHTML = pendingData.map(function(s){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#191c2c;border:1px solid #252840;border-radius:8px;margin-bottom:8px;">' +
+        '<div><span style="color:#fff;font-weight:600;">' + escHtml(s.name) + '</span>' +
+        (s.platform ? ' <span style="color:#888;font-size:12px;">(' + escHtml(s.platform) + ')</span>' : '') +
+        '<p style="font-size:12px;color:#888;margin-top:2px;">' + escHtml((s.detail||"").substring(0,60) + ((s.detail||"").length>60?"…":"")) + '</p></div>' +
+        '<div style="display:flex;gap:6px;">' +
+        '<span class="btn-primary" style="padding:4px 12px;font-size:11px;" onclick="approvePending(\'' + s.id + '\',this)">✅ 通过</span>' +
+        '<span class="btn-danger" style="padding:4px 12px;font-size:11px;" onclick="rejectPending(\'' + s.id + '\',this)">❌ 驳回</span></div></div>';
+    }).join("");
+  }
+}
+
+function applyFilter(filter, btn) {
+  FILTER = filter;
+  document.querySelectorAll(".filter-bar .filter-btn").forEach(function(b){ b.classList.remove("active"); });
+  if (btn) btn.classList.add("active");
+  renderTable();
+}
+
+function escHtml(t) {
+  if (typeof t !== "string") return t || "";
+  var d = document.createElement("div");
+  d.textContent = t;
+  return d.innerHTML;
+}
+
+// === Add / Edit ===
+function showAddModal() {
+  document.getElementById("modalTitle").textContent = "➕ 新增工作室";
+  document.getElementById("editId").value = "";
+  document.getElementById("editName").value = "";
+  document.getElementById("editPlatform").value = "";
+  document.getElementById("editRisk").value = "warning";
+  document.getElementById("editLevel").value = "";
+  document.getElementById("editContact").value = "";
+  document.getElementById("editDetail").value = "";
+  document.getElementById("editSource").value = "管理员录入";
+  document.getElementById("editModal").classList.add("active");
+}
+
+function showEditModal(id) {
+  var s = STUDIOS.filter(function(x){ return x.id === id; })[0];
+  if (!s) return;
+  document.getElementById("modalTitle").textContent = "✏️ 编辑 - " + s.name;
+  document.getElementById("editId").value = s.id;
+  document.getElementById("editName").value = s.name;
+  document.getElementById("editPlatform").value = s.platform || "";
+  document.getElementById("editRisk").value = s.risk || "warning";
+  document.getElementById("editLevel").value = s.level || "";
+  document.getElementById("editContact").value = s.contact || "";
+  document.getElementById("editDetail").value = s.detail || "";
+  document.getElementById("editSource").value = s.source || "管理员录入";
+  document.getElementById("editModal").classList.add("active");
+}
+
+function closeModal() {
+  document.getElementById("editModal").classList.remove("active");
+  document.getElementById("deleteModal").classList.remove("active");
+}
+
+async function saveStudio() {
+  var id = document.getElementById("editId").value;
+  var name = document.getElementById("editName").value.trim();
+  if (!name) { alert("请填写工作室名称"); return; }
+  var data = {
+    name: name,
+    platform: document.getElementById("editPlatform").value,
+    risk: document.getElementById("editRisk").value,
+    level: document.getElementById("editLevel").value || "",
+    contact: document.getElementById("editContact").value.trim(),
+    detail: document.getElementById("editDetail").value.trim(),
+    source: document.getElementById("editSource").value
+  };
+  var result;
+  if (id) {
+    result = await api("/api/admin/studios/" + id, {method:"PUT", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data)});
+  } else {
+    result = await api("/api/admin/studios", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data)});
+  }
+  if (result && result.ok) {
+    closeModal();
+    await loadData();
+  } else {
+    alert("操作失败：" + (result ? (result.error || "未知错误") : "网络错误"));
+  }
+}
+
+// === Delete ===
+function showDeleteModal(id, name) {
+  DELETE_ID = id;
+  document.getElementById("deleteName").textContent = name;
+  document.getElementById("deleteModal").classList.add("active");
+}
+
+async function confirmDelete() {
+  if (!DELETE_ID) return;
+  var result = await api("/api/admin/studios/" + DELETE_ID, {method:"DELETE"});
+  if (result && result.ok) {
+    DELETE_ID = null;
+    document.getElementById("deleteModal").classList.remove("active");
+    await loadData();
+  } else {
+    alert("删除失败");
+  }
+}
+
+// === Approve / Reject ===
+async function approvePending(id, btn) {
+  btn.textContent = "处理中...";
+  var result = await api("/api/admin/reviews/" + id, {method:"PUT", headers:{"Content-Type":"application/json"}, body:JSON.stringify({action:"approve"})});
+  if (result && result.ok) await loadData();
+  else alert("操作失败");
+}
+
+async function rejectPending(id, btn) {
+  btn.textContent = "处理中...";
+  var result = await api("/api/admin/reviews/" + id, {method:"PUT", headers:{"Content-Type":"application/json"}, body:JSON.stringify({action:"reject"})});
+  if (result && result.ok) await loadData();
+  else alert("操作失败");
+}
+
+// === Init ===
+async function init() {
+  var user = await checkAccess();
+  if (!user) return;
+  await loadData();
+}
+init();
+</script>
+</body>
+</html>

@@ -1,120 +1,753 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>跑刀避雷指南 · 三角洲行动工作室红黑榜 | 跑刀护航评价</title>
-  <meta name="description" content="三角洲行动跑刀工作室真实用户评价、护航测评、黑名单查询。接单前先查一查，防止被骗押金。">
-  <meta name="keywords" content="三角洲行动,跑刀工作室,护航,三角洲跑刀,跑刀避雷,工作室黑名单">
-  <meta property="og:title" content="跑刀避雷指南 · 三角洲工作室红黑榜">
-  <meta property="og:description" content="三角洲行动跑刀工作室真实评价，接单防坑必查。">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://bileizhinan.top">
-  <link rel="canonical" href="https://bileizhinan.top/">
-  <link rel="icon" type="image/svg+xml" href="/static/img/logo.svg">
-  <link rel="stylesheet" href="css/style.css?v=1779901786">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>跑刀避雷指南 · 三角洲行动跑刀防坑资讯</title>
+<meta name="description" content="三角洲行动跑刀避坑指南，基于玩家真实投稿+主播测评。接单防坑、骗局曝光、封号预警，纯绿玩家自建防坑站。">
+<meta name="keywords" content="三角洲行动,跑刀避坑,跑刀工作室,护航防坑,三角洲跑刀,接单防坑,骗局曝光">
+<meta property="og:title" content="跑刀避雷指南 · 三角洲行动跑刀防坑资讯">
+<meta property="og:description" content="玩家真实投稿+主播测评，跑刀接单防坑必看。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bileizhinan.top">
+<link rel="canonical" href="https://bileizhinan.top/">
+<link rel="icon" type="image/svg+xml" href="/static/img/logo.svg">
+<style>
+:root {
+  --bg: #141822;
+  --bg-card: #191c2c;
+  --bg-nav: rgba(20,22,34,0.92);
+  --border: #252840;
+  --border-light: #2a2e44;
+  --text: #e0e0e0;
+  --text-secondary: #8888aa;
+  --text-muted: #666;
+  --accent: #FF7D29;
+  --accent-orange: #FF7D29;
+  --safe: #2ECC71;
+  --danger: #FF3B30;
+  --warn: #FF9500;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+/* ===== Navbar (glassmorphism) ===== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-light);
+}
+.navbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+.nav-left { display: flex; align-items: center; gap: 24px; }
+.nav-logo { font-size: 17px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 6px; }
+.nav-links { display: flex; gap: 2px; }
+.nav-link {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  font-weight: 500;
+  transition: 0.2s;
+}
+.nav-link:hover { color: #fff; text-decoration: none; background: rgba(255,255,255,0.06); }
+.nav-link.active { color: var(--accent); background: rgba(255,125,41,0.15); }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-btn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  transition: 0.2s;
+}
+.nav-btn-outline {
+  background: transparent;
+  border: 1px solid #3d4158;
+  color: rgba(255,255,255,0.7);
+}
+.nav-btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+/* user state in nav */
+.nav-user-wrap { display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px 4px 10px; background: rgba(255,255,255,0.06); border-radius: 20px; font-size: 13px; }
+.nav-user-name { color: var(--accent); font-weight: 500; }
+
+/* ===== Hero ===== */
+.hero {
+  padding: 48px 20px 36px;
+  text-align: center;
+  background: linear-gradient(135deg, #141822 0%, #1a1e30 50%, #1f2340 100%);
+  border-bottom: 1px solid var(--border-light);
+}
+.hero h1 { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+.hero .highlight { color: var(--accent); }
+.hero .subtitle { font-size: 14px; color: var(--text-secondary); margin-bottom: 22px; }
+.hero .search-box {
+  display: flex;
+  max-width: 500px;
+  margin: 0 auto 8px;
+  gap: 0;
+}
+.hero .search-box input {
+  flex: 1;
+  padding: 11px 16px;
+  border-radius: 8px 0 0 8px;
+  border: 1.5px solid var(--border-light);
+  border-right: none;
+  background: #1a1c2a;
+  color: #ccc;
+  font-size: 14px;
+  outline: none;
+}
+.hero .search-box input:focus { border-color: var(--accent); }
+.hero .search-box button {
+  padding: 11px 20px;
+  border-radius: 0 8px 8px 0;
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.hero .search-box button:hover { background: #e66a1e; }
+.hero .search-tip { font-size: 13px; color: #666680; }
+.hero .search-tip a { color: var(--accent); }
+
+/* ===== Two-column layout ===== */
+.main-content { padding: 32px 0; }
+.two-col { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+
+/* ===== Section headers ===== */
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title .icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+/* ===== Cards ===== */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.card {
+  background: var(--bg-card);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 16px;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: #3d4160; }
+.card .tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.tag-danger { background: rgba(255,59,48,0.18); color: var(--danger); }
+.tag-warning { background: rgba(255,149,0,0.18); color: var(--warn); }
+.tag-safe { background: rgba(46,204,113,0.18); color: var(--safe); }
+.tag-source { background: rgba(90,100,180,0.18); color: #8a98d0; }
+.card h3 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+.card p { font-size: 13px; color: #999abb; line-height: 1.5; margin-bottom: 8px; }
+.card .meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.card .meta .src { color: #7a7a9a; }
+.card-list .card { margin-bottom: 10px; }
+
+/* ===== Sidebar Widgets ===== */
+.widget {
+  background: var(--bg-card);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.widget h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ddd;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.widget-item {
+  padding: 6px 0;
+  border-bottom: 1px solid #1e2032;
+  font-size: 13px;
+  color: #8888aa;
+  line-height: 1.4;
+}
+.widget-item:last-child { border-bottom: none; }
+.widget-cta {
+  background: linear-gradient(135deg, rgba(255,125,41,0.08), rgba(255,87,34,0.04));
+  border-color: rgba(255,125,41,0.15);
+}
+.widget-cta h4 { color: var(--accent); }
+
+/* ===== Sidebar search ===== */
+.sidebar-search {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: #1a1c2a;
+  color: #ccc;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+}
+.sidebar-search:focus { border-color: var(--accent); }
+
+/* ===== Platform Grid ===== */
+.platform-section { padding: 40px 0; border-top: 1px solid var(--border-light); }
+.platform-head { text-align: center; margin-bottom: 24px; }
+.platform-head h2 { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.platform-head p { font-size: 13px; color: var(--text-secondary); }
+.platform-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.platform-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 24px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  transition: 0.2s;
+  text-decoration: none;
+}
+.platform-item:hover { transform: translateY(-3px); border-color: var(--accent); text-decoration: none; }
+.platform-item .pi-icon { font-size: 28px; }
+.platform-item .pi-name { font-size: 14px; font-weight: 600; color: #ddd; }
+.platform-item .pi-count { font-size: 12px; color: var(--text-secondary); }
+
+/* ===== How To ===== */
+.howto-section { padding: 40px 0; border-top: 1px solid var(--border-light); }
+.howto-section h2 { text-align: center; font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 20px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.step {
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--bg-card);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.step-num {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  margin: 0 auto 10px;
+}
+.step p { font-size: 13px; color: #999abb; line-height: 1.5; }
+.step p strong { color: #ddd; }
+
+/* ===== Footer ===== */
+.footer {
+  background: #0a0b14;
+  border-top: 1px solid var(--border-light);
+  text-align: center;
+  padding: 28px 0;
+  font-size: 13px;
+  color: #666680;
+}
+.footer .small { font-size: 12px; margin-top: 4px; }
+
+/* ===== Search Modal ===== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: var(--bg-card); border-radius: 14px;
+  border: 1px solid var(--border-light);
+  max-width: 560px; width: 100%; max-height: 80vh; overflow-y: auto;
+  padding: 20px;
+}
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.modal-header h3 { font-size: 15px; font-weight: 600; color: #fff; }
+.modal-close {
+  width: 32px; height: 32px; border: none; background: rgba(255,255,255,0.06);
+  border-radius: 50%; font-size: 16px; cursor: pointer;
+  color: #888; display: flex; align-items: center; justify-content: center;
+}
+
+/* ===== Loading ===== */
+.loading { text-align: center; color: var(--text-secondary); padding: 30px 0; font-size: 14px; }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .two-col { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .platform-grid { grid-template-columns: repeat(2, 1fr); }
+  .navbar .container { height: auto; padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
+  .nav-links { flex-wrap: wrap; }
+  .hero h1 { font-size: 22px; }
+  .hero .search-box { flex-direction: column; }
+  .hero .search-box input { border-radius: 8px; border-right: 1.5px solid var(--border-light); }
+  .hero .search-box button { border-radius: 8px; margin-top: 6px; }
+}
+
+/* === Card Comments === */
+.comment-section{margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
+.comment-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.comment-header span{font-size:12px;color:var(--text-secondary)}
+.comment-badge{font-size:11px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.05);color:#999;font-weight:500}
+.comment-item{padding:8px 10px;margin-bottom:6px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border);font-size:13px}
+.comment-item:last-child{margin-bottom:0}
+.comment-user{font-weight:600;color:var(--accent);font-size:12px;display:flex;align-items:center;gap:6px}
+.comment-user .admin-badge{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;background:var(--accent);color:#fff;border-radius:4px;font-size:10px;font-weight:600}
+.comment-text{color:#ccc;line-height:1.4;margin:3px 0}
+.comment-date{font-size:11px;color:var(--text-muted);float:right}
+.comment-input-wrap{display:flex;gap:6px;margin-top:8px}
+.comment-input{flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;background:#1a1c2a;color:#ccc;font-size:12px;outline:none;transition:border-color 0.2s}
+.comment-input:focus{border-color:var(--accent)}
+.comment-btn{padding:7px 14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:default;transition:opacity 0.2s}
+.comment-btn:hover{opacity:0.85}
+.comment-login-link{font-size:12px;color:var(--accent);margin-top:6px;display:inline-block}
+.comment-empty{font-size:12px;color:var(--text-muted);padding:8px 0}
+
+</style>
 </head>
 <body>
-  <header class="header">
-    <div class="container">
-      
-            <nav>
-        
-        <span id="navLogin"></span>
-      </nav>
-    </div>
-  </header>
 
-  <section class="hero">
-    <div class="container">
-      <h1>三角洲跑刀工作室 <span class="highlight">红黑榜</span></h1>
-      <p class="subtitle">纯绿玩家视角 · 真实测评 · 接单防坑</p>
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="搜工作室名字，比如：武汉禄昌商贸">
-        <button id="searchBtn" onclick="doSearch()">🔍 查一下</button>
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="container">
+    <div class="nav-left">
+      <div class="nav-logo">🔪 避雷指南</div>
+      <div class="nav-links">
+        <a href="/" class="nav-link active">首页</a>
+        <a href="/paodao.html" class="nav-link">跑刀避坑</a>
+        <a href="/pianju.html" class="nav-link">骗局拆解</a>
+        <a href="/fenghao.html" class="nav-link">封号预警</a>
+        <a href="#howto" class="nav-link">新手入门</a>
+        <a href="submit.html" class="nav-link">投稿入口</a>
       </div>
-      <p class="search-tip">搜不到？<a href="submit.html">点这里曝光</a>，帮兄弟避雷</p>
     </div>
-  </section>
+    <div class="nav-right">
+      <span id="navLogin"></span>
+    </div>
+  </div>
+</nav>
 
-  <section class="stats">
-    <div class="container">
-      <div class="stat-card">
-        <span class="stat-number" id="totalCount">--</span>
-        <span class="stat-label">收录工作室</span>
-      </div>
-      <div class="stat-card danger">
-        <span class="stat-number" id="blackCount">--</span>
-        <span class="stat-label">黑名单</span>
-      </div>
-      <div class="stat-card safe">
-        <span class="stat-number" id="whiteCount">--</span>
-        <span class="stat-label">白名单</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-number" id="reportCount">--</span>
-        <span class="stat-label">避雷记录</span>
-      </div>
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <h1>三角洲行动 <span class="highlight">跑刀防坑</span> 指南</h1>
+    <p class="subtitle">基于玩家真实投稿 + 主播实测测评整理 · 接单前先查一查</p>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="搜索工作室/骗局关键词…">
+      <button onclick="doSearch()">🔍 搜索</button>
     </div>
-  </section>
+    <p class="search-tip">搜不到？<a href="submit.html">点这里曝光</a>，帮兄弟避雷</p>
+  </div>
+</section>
 
-<section class="platforms">
-    <div class="container">
-      <div class="platform-head">
-        <h2>📂 按平台查看</h2>
+<!-- Main Content -->
+<section class="main-content">
+  <div class="container two-col">
+
+    <!-- Left Column -->
+    <div>
+
+      <!-- Featured Warning Cards -->
+      <div class="section-title">
+        <span class="icon-box" style="background:rgba(255,59,48,0.2);color:var(--danger);">⚠️</span>
+        置顶 · 高发跑刀坑
       </div>
-      <div class="platform-grid" id="platformGrid">
+      <div class="card-grid" id="featuredCards"></div>
+
+      <!-- Latest Cases -->
+      <div class="section-title">
+        <span class="icon-box" style="background:rgba(90,100,180,0.2);color:#8a98d0;">📋</span>
+        最新跑刀案例
       </div>
-    </div>
-  </section>
-  <section class="recent">
-    <div class="container">
-      <h2>🆕 最近收录</h2>
       <div class="card-list" id="recentList">
         <p class="loading">加载中...</p>
       </div>
     </div>
-  </section>
 
-  <section class="howto">
-    <div class="container">
-      <h2>📌 怎么用这个站</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <p><strong>搜名字</strong> — 接单前搜一下工作室名字，看看有没有雷</p>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <p><strong>看评价</strong> — 红榜是靠谱的，黑榜是跑路/骗押金的</p>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <p><strong>投稿曝光</strong> — 被坑了就来投稿，帮兄弟们避雷</p>
+    <!-- Right Sidebar -->
+    <div>
+      <div class="widget">
+        <h4>🔍 搜案例</h4>
+        <input type="text" id="sidebarSearch" class="sidebar-search" placeholder="搜工作室/关键词…">
+      </div>
+
+      <div class="widget">
+        <h4>🔥 热门案例</h4>
+        <div id="hotCasesList">
+          <div style="padding:8px 0;font-size:13px;color:#666;" class="loading">加载中...</div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <footer class="footer">
-    <div class="container">
-      <p>跑刀避雷指南 · 纯绿玩家自建测评站</p>
-      <p class="footer-small">数据来源于玩家投稿，仅供参考。接单前请自行判断。</p>
-    </div>
-  </footer>
-
-  <!-- Search Results Modal -->
-  <div class="search-results-overlay" id="searchModal">
-    <div class="search-results-modal">
-      <div class="modal-header">
-        <h3>🔍 搜索结果</h3>
-        <button class="modal-close" onclick="closeSearch()">✕</button>
+      <div class="widget">
+        <h4>💬 最新评论</h4>
+        <div id="recentComments">
+          <div style="padding:8px 0;font-size:13px;color:#666;" class="loading">加载中...</div>
+        </div>
       </div>
-      <div id="searchResults"></div>
+
+      <div class="widget widget-cta">
+        <h4>📮 曝光投稿</h4>
+        <p style="font-size:13px;color:#999abb;line-height:1.5;margin-bottom:10px;">被坑了？发现骗子工作室？来这里曝光，帮兄弟避雷。</p>
+        <a href="submit.html" style="display:block;text-align:center;padding:9px;background:var(--accent);color:#fff;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none;">📢 我要曝光</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Platform Grid -->
+<section class="platform-section">
+  <div class="container">
+    <div class="platform-head">
+      <h2>📂 按平台查看案例</h2>
+      <p>选择平台，查看对应跑刀案例</p>
+    </div>
+    <div class="platform-grid" id="platformGrid"></div>
+  </div>
+</section>
+
+<!-- How To -->
+<section class="howto-section" id="howto">
+  <div class="container">
+    <h2>📌 怎么用这个站</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <p><strong>搜名字</strong> — 接单前搜一下工作室/店铺名字，看看有没有前科</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <p><strong>看案例</strong> — 看别人怎么被骗的，同一个人换个马甲你也认得出来</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <p><strong>投稿曝光</strong> — 被坑了就来投稿，帮兄弟们避雷</p>
+      </div>
     </div>
   </div>
+</section>
 
-  
-  <script src="js/app.js?v=1779902031"></script>
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <p>跑刀避雷指南 · 纯绿玩家自建防坑站</p>
+    <p class="small">数据来源于玩家投稿，仅供参考。接单前请自行判断。</p>
+  </div>
+</footer>
+
+<!-- Search Modal -->
+<div class="modal-overlay" id="searchModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>🔍 搜索结果</h3>
+      <button class="modal-close" onclick="closeSearch()">✕</button>
+    </div>
+    <div id="searchResults"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 跑刀避雷指南 · 公开首页数据（无红黑榜）
+// ============================================================
+
+var STUDIOS = [];
+var CURRENT_USER = null;
+
+async function loadStudios() {
+  try { var r = await fetch("/api/studios"); var d = await r.json(); STUDIOS = d.studios || []; }
+  catch(e) { STUDIOS = []; }
+}
+async function checkLogin() {
+  try { var r = await fetch("/api/session"); var d = await r.json(); return d.user || null; }
+  catch(e) { return null; }
+}
+
+function escHtml(t) {
+  if (typeof t !== "string") return t || "";
+  var d = document.createElement("div"); d.textContent = t; return d.innerHTML;
+}
+function formatDate(d) {
+  if (!d) return "-";
+  return d.replace(/(\d{4})-(\d{2})-(\d{2}).*/, "$1.$2.$3") || d;
+}
+
+const RISK_LABEL = {
+  safe: {text:"✅ 安全", cls:"tag-safe"},
+  warning: {text:"⚠️ 存疑", cls:"tag-warning"},
+  danger: {text:"❌ 避雷", cls:"tag-danger"}
+};
+
+// Nav
+async function updateNav() {
+  var navEl = document.getElementById("navLogin");
+  if (!navEl) return;
+  var user = await checkLogin(); CURRENT_USER = user;
+  if (user) {
+    navEl.innerHTML =
+      '<span class="nav-user-wrap"><span class="nav-user-name">👤 ' + escHtml(user) + '</span></span>' +
+      '<a href="/dashboard" style="padding:6px 10px;font-size:13px;color:rgba(255,255,255,0.7);">📋 我的</a>' +
+      '<a href="/logout" style="padding:6px 10px;font-size:13px;color:var(--danger);opacity:0.7;">🚪</a>';
+  } else {
+    navEl.innerHTML =
+      '<a href="/login" class="nav-btn nav-btn-outline">🔑 登录</a>';
+  }
+}
+
+// Render card
+function renderCard(s) {
+  var risk = RISK_LABEL[s.risk] || RISK_LABEL.danger;
+  var srcIcon = "📝";
+  if (s.source && s.source.indexOf("主播") >= 0) srcIcon = "🎙️";
+  if (s.source && s.source.indexOf("管理员") >= 0) srcIcon = "🛡️";
+  var cmtInput = '';
+  if (CURRENT_USER) {
+    cmtInput = '<div class="comment-input-wrap"><input type="text" class="comment-input" id="ci_'+s.id+'" placeholder="写评论..." data-sid="'+s.id+'"><button class="comment-btn" data-sid="'+s.id+'">发送</button></div>';
+  } else {
+    cmtInput = '<a href="/login" class="comment-login-link">🔑 登录后可评论</a>';
+  }
+  return '<div class="card">' +
+    '<span class="tag ' + risk.cls + '">' + risk.text + '</span>' +
+    '<h3>' + escHtml(s.name) + '</h3>' +
+    '<p>' + escHtml(s.detail) + '</p>' +
+    '<div class="meta">' +
+      (s.platform ? '<span>📱 ' + escHtml(s.platform) + '</span>' : '') +
+      '<span>📅 ' + formatDate(s.date) + '</span>' +
+      '<span class="src">' + srcIcon + ' ' + escHtml(s.source || "用户投稿") + '</span>' +
+    '</div>' +
+    '<div class="comment-section"><div class="comment-header"><span>💬 评论</span><span class="comment-badge" id="cb-'+s.id+'"></span></div><div id="comments-'+s.id+'"><div class="comment-empty">加载评论...</div></div>'+cmtInput+'</div></div>';
+}
+
+// Search
+function doSearch() {
+  var inp = document.getElementById("searchInput");
+  if (!inp || !inp.value.trim()) return;
+  var kw = inp.value.trim().toLowerCase();
+  var results = STUDIOS.filter(function(s){
+    return (s.name||"").toLowerCase().indexOf(kw) >= 0 || (s.detail||"").toLowerCase().indexOf(kw) >= 0;
+  });
+  var el = document.getElementById("searchResults");
+  var modal = document.getElementById("searchModal");
+  if (!el || !modal) return;
+  if (results.length === 0) {
+    el.innerHTML = '<div style="padding:40px 20px;text-align:center;color:#8888aa;">😕 没有找到 <strong>' + escHtml(kw) + '</strong> 的相关记录</div>';
+  } else {
+    el.innerHTML = results.map(renderCard).join("");
+  }
+  modal.classList.add("show");
+}
+function closeSearch() {
+  document.getElementById("searchModal").classList.remove("show");
+}
+
+// Init
+
+
+// Card Comments
+function loadComments(sid) {
+  fetch('/api/studios/'+sid+'/comments').then(function(r){return r.json()}).then(function(d){
+    var el=document.getElementById('comments-'+sid);
+    if(!el)return;
+    var cmts=d.comments||[];
+    el.innerHTML='';
+    if(cmts.length===0){el.innerHTML='<div class="comment-empty">暂无评论</div>';return;}
+    cmts.forEach(function(c){
+      var badge=c.is_admin?'<span class="admin-badge">🛡️ 管理员</span>':'';
+      el.innerHTML+='<div class="comment-item"><div class="comment-user">'+escHtml(c.user)+badge+'<span class="comment-date">'+(c.date||'')+'</span></div><div class="comment-text">'+escHtml(c.content)+'</div></div>';
+    });
+  });
+}
+function sdci(sid){
+  var inp=document.getElementById('ci_'+sid);
+  if(!inp||!inp.value.trim())return;
+  var x=new XMLHttpRequest();
+  x.open('POST','/api/comments',true);
+  x.setRequestHeader('Content-Type','application/json');
+  x.onload=function(){if(x.status===200){inp.value='';loadComments(sid);}};
+  x.send(JSON.stringify({studio_id:sid,content:inp.value.trim()}));
+}
+
+
+// Delegated events for comment input
+document.addEventListener('keydown', function(e){
+  if(e.key==='Enter' && e.target.classList.contains('comment-input')){
+    var sid = e.target.getAttribute('data-sid');
+    if(sid) sdci(sid);
+  }
+});
+document.addEventListener('click', function(e){
+  if(e.target.classList.contains('comment-btn')){
+    var sid = e.target.getAttribute('data-sid');
+    if(sid) sdci(sid);
+  }
+});
+
+async function initHome() {
+  await loadStudios();
+  await updateNav();
+
+  // Featured cards
+  var fc = document.getElementById("featuredCards");
+  if (fc) {
+    fc.innerHTML = [
+      {icon:"💰", title:"低价撤离坑", desc:"标价20r/1000w远低于市场价吸引下单，接单后拖3小时+不到账，直接拉黑。", tag:"danger", label:"低价陷阱"},
+      {icon:"🔒", title:"代跑押金坑", desc:"要求先付押金再上号，打完说违规操作押金不退，受害者累计数千元。", tag:"warning", label:"押金诈骗"},
+      {icon:"🚫", title:"封号连带坑", desc:"代练使用第三方插件，玩家账号被系统封禁30天+，工作室失联。", tag:"danger", label:"封号风险"}
+    ].map(function(f){
+      return '<div class="card" style="border-top:3px solid ' + (f.tag==="danger"?"var(--danger)":"var(--warn)") + ';">' +
+        '<span class="tag ' + (f.tag==="danger"?"tag-danger":"tag-warning") + '">' + f.label + '</span>' +
+        '<h3>' + f.title + '</h3>' +
+        '<p>' + f.desc + '</p></div>';
+    }).join("");
+  }
+
+  // Latest cases
+  var list = document.getElementById("recentList");
+  if (list) {
+    if (STUDIOS.length === 0) {
+      list.innerHTML = '<p class="loading">还没收录案例</p>';
+    } else {
+      var recent = [].concat(STUDIOS).reverse().slice(0, 8);
+      list.innerHTML = recent.map(renderCard).join("");
+      recent.forEach(function(s){loadComments(s.id);});
+    }
+  }
+
+  // Platform grid
+  var pg = document.getElementById("platformGrid");
+  if (pg) {
+    pg.innerHTML = [
+      {key:"xianyu", icon:"🛒", name:"闲鱼"},
+      {key:"douyin", icon:"🎥", name:"抖音"},
+      {key:"bilibili", icon:"📺", name:"B站"}
+    ].map(function(p){
+      var count = STUDIOS.filter(function(s){ return s.platform === p.key || s.platform === p.name; }).length;
+      return '<a href="/list.html?platform=' + p.key + '" class="platform-item">' +
+        '<span class="pi-icon">' + p.icon + '</span>' +
+        '<span class="pi-name">' + p.name + '</span>' +
+        '<span class="pi-count">' + count + '条案例</span></a>';
+    }).join("");
+  }
+
+  // Hot cases (sidebar)
+  var hot = document.getElementById("hotCasesList");
+  if (hot) {
+    if (STUDIOS.length === 0) {
+      hot.innerHTML = '<div style="padding:8px 0;font-size:13px;color:#666;">暂无数据</div>';
+    } else {
+      hot.innerHTML = [].concat(STUDIOS).slice(0, 5).map(function(s){
+        return '<div class="widget-item">' +
+          '<div style="display:flex;justify-content:space-between;">' +
+          '<span>' + escHtml(s.name) + '</span>' +
+          '<span style="color:#666;font-size:12px;">' + escHtml(s.platform) + '</span></div></div>';
+      }).join("");
+    }
+  }
+
+  // Recent comments (sidebar)
+  var rc = document.getElementById("recentComments");
+  if (rc) {
+    if (STUDIOS.length > 0) {
+      var sampleComments = [];
+      var promises = [];
+      for (var i = 0; i < Math.min(3, STUDIOS.length); i++) {
+        (function(sid, sname) {
+          promises.push(
+            fetch("/api/studios/" + sid + "/comments")
+              .then(function(r){ return r.json(); })
+              .then(function(d){
+                if (d.comments && d.comments.length > 0) {
+                  d.comments.slice(0, 2).forEach(function(c){
+                    sampleComments.push({studio: sname, user: c.user, text: c.content});
+                  });
+                }
+              })
+              .catch(function(){})
+          );
+        })(STUDIOS[i].id, STUDIOS[i].name);
+      }
+      Promise.all(promises).then(function(){
+        if (sampleComments.length > 0) {
+          rc.innerHTML = sampleComments.slice(0, 4).map(function(c){
+            return '<div class="widget-item">' +
+              '<span style="color:var(--accent);">' + escHtml(c.user || "匿名") + '</span>' +
+              '：<span>' + escHtml((c.text||"").substring(0, 35) + ((c.text||"").length > 35 ? "…" : "")) + '</span></div>';
+          }).join("");
+        } else {
+          rc.innerHTML = '<div style="padding:8px 0;font-size:13px;color:#666;">暂无评论</div>';
+        }
+      });
+    } else {
+      rc.innerHTML = '<div style="padding:8px 0;font-size:13px;color:#666;">暂无数据</div>';
+    }
+  }
+
+  // Sidebar search enter key
+  var ss = document.getElementById("sidebarSearch");
+  if (ss) {
+    ss.onkeydown = function(e) {
+      if (e.key === "Enter") {
+        document.getElementById("searchInput").value = this.value;
+        doSearch();
+      }
+    };
+  }
+}
+
+initHome();
+</script>
 </body>
 </html>

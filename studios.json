@@ -1,6 +1,6 @@
 [
   {
-    "id": "s002",
+    "id": "s001",
     "name": "亿豪工作室",
     "risk": "danger",
     "level": false,
@@ -11,7 +11,7 @@
     "source": "贴吧举报帖"
   },
   {
-    "id": "s003",
+    "id": "s002",
     "name": "飞翔跑刀（闲鱼店）",
     "risk": "warning",
     "level": false,
@@ -22,7 +22,7 @@
     "source": "闲鱼买家评价"
   },
   {
-    "id": "s004",
+    "id": "s003",
     "name": "吹大泡泡",
     "risk": "safe",
     "level": "gold",
@@ -34,7 +34,7 @@
     "evidence": "可直播可走闲鱼"
   },
   {
-    "id": "s005",
+    "id": "s004",
     "name": "速通代练工作室",
     "risk": "danger",
     "level": false,
@@ -45,7 +45,7 @@
     "source": "NGA论坛反馈"
   },
   {
-    "id": "s006",
+    "id": "s005",
     "name": "雷霆护航",
     "risk": "safe",
     "level": "gold",
@@ -56,7 +56,7 @@
     "source": "玩家实测"
   },
   {
-    "id": "s007",
+    "id": "s006",
     "name": "星辰俱乐部",
     "risk": "warning",
     "level": false,
@@ -67,7 +67,7 @@
     "source": "微信群内反馈"
   },
   {
-    "id": "s008",
+    "id": "s007",
     "name": "红叶游戏",
     "risk": "safe",
     "level": "gold",
@@ -78,7 +78,7 @@
     "source": "玩家实测"
   },
   {
-    "id": "s009",
+    "id": "s008",
     "name": "幻影护航",
     "risk": "danger",
     "level": false,
@@ -89,7 +89,7 @@
     "source": "B站私信举报"
   },
   {
-    "id": "s010",
+    "id": "s009",
     "name": "老K跑刀",
     "risk": "safe",
     "level": "silver",
@@ -100,7 +100,7 @@
     "source": "玩家实测"
   },
   {
-    "id": "s011",
+    "id": "s010",
     "name": "极速达工作室",
     "risk": "danger",
     "level": false,
@@ -111,7 +111,7 @@
     "source": "抖音评论区"
   },
   {
-    "id": "s012",
+    "id": "s011",
     "name": "小明代练",
     "risk": "warning",
     "level": false,
@@ -122,7 +122,7 @@
     "source": "闲鱼评价"
   },
   {
-    "id": "s013",
+    "id": "s012",
     "name": "黑金工作室",
     "risk": "safe",
     "level": "gold",
@@ -133,7 +133,7 @@
     "source": "玩家实测"
   },
   {
-    "id": "s014",
+    "id": "s013",
     "name": "一路发跑刀俱乐部",
     "risk": "danger",
     "level": false,
@@ -144,7 +144,7 @@
     "source": "贴吧曝光帖"
   },
   {
-    "id": "s015",
+    "id": "s014",
     "name": "清风跑刀",
     "risk": "safe",
     "level": "silver",
@@ -155,7 +155,7 @@
     "source": "玩家实测"
   },
   {
-    "id": "s016",
+    "id": "s015",
     "name": "巅峰护航工作室",
     "risk": "warning",
     "level": false,
@@ -166,31 +166,123 @@
     "source": "QQ群内反馈"
   },
   {
-    "id": "s016",
-    "name": "test",
+    "name": "腾讯游戏平台代练",
     "risk": "danger",
     "level": false,
-    "platform": "小红书",
-    "contact": "",
-    "detail": "test",
-    "contact_back": "",
-    "date": "2026-05-28",
-    "source": "用户投稿",
-    "reporter": "anonymous",
-    "status": "pending"
+    "platform": "QQ",
+    "contact": "QQ群",
+    "detail": "声称平台代练，要求先交300元保证金，承诺打完6单后退还，实际根本没有订单，保证金不退。",
+    "date": "2026-05",
+    "source": "360搜索案例",
+    "id": "s016",
+    "status": "published"
   },
   {
+    "name": "主播代肝（跑刀）",
+    "risk": "warning",
+    "level": false,
+    "platform": "抖音",
+    "contact": "抖音私信",
+    "detail": "某些主播私下接代肝跑刀单，收取费用后服务态度差、效率低，存在拖延和拉黑风险。",
+    "date": "2026-05",
+    "source": "360搜索案例",
     "id": "s017",
-    "name": "test123",
+    "status": "published"
+  },
+  {
+    "name": "低价跑刀代练（多平台）",
     "risk": "danger",
     "level": false,
-    "platform": "小红书",
-    "contact": "test_contact",
-    "detail": "测试投稿内容",
-    "contact_back": "",
-    "date": "2026-05-28",
-    "source": "用户投稿",
-    "reporter": "anonymous",
-    "status": "pending"
+    "platform": "闲鱼",
+    "contact": "闲鱼搜索低价代练",
+    "detail": "以远低于市场价的20r/1000w等超低价吸引客户，收取定金后不发货或不提供服务。请注意低价陷阱。",
+    "date": "2026-05",
+    "source": "360搜索+B站案例",
+    "id": "s018",
+    "status": "published"
+  },
+  {
+    "name": "三角洲代肝押金骗局",
+    "risk": "danger",
+    "level": false,
+    "platform": "B站",
+    "contact": "B站私信",
+    "detail": "B站视频曝光，代肝跑刀接单骗保证金套路，以各种名目要求先交保证金。",
+    "date": "2026-05",
+    "source": "B站曝光视频",
+    "id": "s019",
+    "status": "published"
+  },
+  {
+    "name": "鹤壁市文斌网络科技（B站工作室）",
+    "risk": "danger",
+    "level": false,
+    "platform": "B站",
+    "contact": "B站搜索该工作室",
+    "detail": "B站up主「阿可大魔王」曝光，该工作室以代肝跑刀为名骗取劳动力，让玩家当免费黑奴。提醒各位跑刀玩家警惕该公司及其马甲。",
+    "date": "2026-05",
+    "source": "B站曝光视频BV12SzvBVECi",
+    "id": "s020",
+    "status": "published"
+  },
+  {
+    "name": "闲鱼低价代肝（星尘曝光）",
+    "risk": "danger",
+    "level": false,
+    "platform": "闲鱼",
+    "contact": "闲鱼搜索代肝",
+    "detail": "B站up主「星尘k落榜艺术家」曝光，闲鱼上的跑刀代肝骗局，做代肝的兄弟们需注意防范。",
+    "date": "2026-05",
+    "source": "B站曝光视频BV1TmVp62Ewf",
+    "id": "s021",
+    "status": "published"
+  },
+  {
+    "name": "先交保证金代练平台",
+    "risk": "danger",
+    "level": false,
+    "platform": "QQ",
+    "contact": "QQ群/微信群",
+    "detail": "要求先交300元保证金，声称打完6单后退还。实际上以各种理由不给订单或直接消失，保证金不退还。多个受害者反映。",
+    "date": "2026-05",
+    "source": "网络案例汇总",
+    "id": "s022",
+    "status": "published"
+  },
+  {
+    "name": "抖音跑刀垫付骗局",
+    "risk": "danger",
+    "level": false,
+    "platform": "抖音",
+    "contact": "抖音搜索跑刀代练",
+    "detail": "抖音上一些声称高价收号的跑刀代练，要求先垫付改绑费用或账号验证金，收钱后立即拉黑。",
+    "date": "2026-05",
+    "source": "360搜索案例",
+    "id": "s023",
+    "status": "published"
+  },
+  {
+    "name": "安阳张创电竞",
+    "risk": "danger",
+    "level": false,
+    "platform": "抖音",
+    "contact": "抖音搜索",
+    "detail": "河南安阳新骗局，声称无需缴纳押金，实际以各种借口要求支付保证金、打点费等，多名玩家反映被骗。",
+    "date": "2026-05",
+    "source": "360搜索案例",
+    "id": "s024",
+    "status": "published"
+  },
+  {
+    "name": "超低价跑刀（20r/1000w）",
+    "risk": "warning",
+    "level": false,
+    "platform": "闲鱼",
+    "contact": "闲鱼搜索超低价跑刀",
+    "detail": "以远低于市场价的20r/1000w超低价吸引客户，实际效率极低或根本不发货。建议远离价格明显低于正常水平的'跑刀'服务。",
+    "date": "2026-05",
+    "source": "B站+闲鱼案例",
+    "id": "s025",
+    "status": "published"
   }
 ]

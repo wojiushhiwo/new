@@ -201,6 +201,57 @@ def require_perm(perm):
         return decorated
     return decorator
 
+# ===== Redblack Access Control =====
+def has_redblack_access(username):
+    """检查用户是否有红黑榜访问权限"""
+    user = get_user(username)
+    if not user:
+        return False
+    role = user.get("role", "")
+    if role == "super_admin":
+        return True
+    if role == "admin":
+        perms = user.get("permissions", [])
+        if "redblack" in perms:
+            return True
+    return False
+
+def redblack_required(f):
+    """红黑榜访问装饰器"""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if "user" not in session:
+            return redirect(url_for("login_page"))
+        if not has_redblack_access(session.get("user")):
+            return render_template_string("""
+            <!DOCTYPE html>
+            <html lang="zh-CN">
+            <head><meta charset="UTF-8"><title>无权限 · 跑刀避雷指南</title>
+            <meta name="robots" content="noindex, nofollow">
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+                background: #0d0e1a; color: #e0e0e0; display: flex; align-items: center; justify-content: center;
+                min-height: 100vh; text-align: center; padding: 20px; }
+              .card { max-width: 400px; padding: 40px; background: #191c2c; border-radius: 12px;
+                border: 1px solid #252840; }
+              h1 { font-size: 2rem; margin-bottom: 10px; }
+              p { color: #888; margin-bottom: 20px; line-height: 1.6; }
+              a { color: #FF7D29; text-decoration: none; }
+              a:hover { text-decoration: underline; }
+            </style></head>
+            <body>
+              <div class="card">
+                <h1>🔒</h1>
+                <h2 style="color:#FF3B30;">权限不足</h2>
+                <p>你没有访问俱乐部红黑榜的权限。<br>如需访问，请联系超级管理员分配权限。</p>
+                <a href="/">← 返回首页</a>
+              </div>
+            </body></html>
+            """), 403
+        return f(*args, **kwargs)
+    return decorated
+
+
 # ===== Public Routes =====
 @app.route("/")
 @app.route("/index.html")
@@ -210,6 +261,19 @@ def index():
 @app.route("/list.html")
 def list_page():
     return send_from_directory(STATIC_DIR, "list.html")
+
+@app.route('/paodao.html')
+def paodao_page():
+    return send_from_directory(STATIC_DIR, 'paodao.html')
+
+@app.route('/pianju.html')
+def pianju_page():
+    return send_from_directory(STATIC_DIR, 'pianju.html')
+
+@app.route('/fenghao.html')
+def fenghao_page():
+    return send_from_directory(STATIC_DIR, 'fenghao.html')
+
 
 @app.route("/about.html")
 @login_required
@@ -482,7 +546,7 @@ def admin_moderate_comment(comment_id):
 @app.route("/admin.html")
 @login_required
 def admin_page():
-    if session.get("user") != "admin":
+    if not has_permission(session.get("user")):
         return redirect(url_for("index"))
     return send_from_directory(STATIC_DIR, "admin.html")
 
@@ -752,6 +816,20 @@ def admin_delete_invite(code):
 if not os.path.exists(USERS_FILE):
     save_user("admin", "admin123", role="super_admin")
 
+
+
+# ===== Redblack Routes =====
+@app.route("/redblack")
+@redblack_required
+def redblack_page():
+    """红黑榜管理页面 - 仅管理员可访问"""
+    return send_from_directory(STATIC_DIR, 'redblack.html')
+
+@app.route("/api/redblack")
+@redblack_required
+def api_redblack():
+    """红黑榜数据 API - 返回完整工作室数据"""
+    return {"studios": load_studios()}
 
 # ===== Contact/Customer Service =====
 CONTACT_FILE = os.path.join(DATA_DIR, "contact_messages.json")

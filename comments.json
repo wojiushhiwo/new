@@ -27,7 +27,254 @@
       "content": "test from sdci",
       "date": "2026-05",
       "status": "approved"
+    },
+    {
+      "id": "c1780035383666",
+      "user": "admin",
+      "content": "此工作室已被多人举报。建议在B站搜索相关避雷帖，确认不再活跃再下单。已被骗的玩家建议集体报警。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
     }
   ],
-  "s016": []
+  "s016": [
+    {
+      "id": "c1780035435971",
+      "user": "admin",
+      "content": "腾讯相关平台注意核实真伪，有冒充腾讯官方的骗局。建议通过官方渠道联系。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s004": [
+    {
+      "id": "c1780035383680",
+      "user": "admin",
+      "content": "QQ群接单的工作室尤其要谨慎，建议通过平台交易（闲鱼/淘宝）有保障，不要直接转账。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s010": [
+    {
+      "id": "c1780035383694",
+      "user": "admin",
+      "content": "抖音上大量此类工作室，注意看账号注册时间和新号迹象。新号+低价+催付款=危险信号。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s013": [
+    {
+      "id": "c1780035383707",
+      "user": "admin",
+      "content": "微信交易风险极高，没有平台担保。建议只与可查证的正规工作室通过平台交易。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s020": [
+    {
+      "id": "c1780035383720",
+      "user": "admin",
+      "content": "UP主阿可大魔王专门做了曝光视频，建议大家去看看原视频避雷。骗子公司还在换马甲运营中。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s003": [
+    {
+      "id": "c1780035383734",
+      "user": "admin",
+      "content": "闲鱼交易有平台保障，建议走闲鱼链接下单。收到货再确认，不要提前确认收货。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s005": [
+    {
+      "id": "c1780035383748",
+      "user": "admin",
+      "content": "抖音上信誉较好的护航工作室，价格透明。建议通过抖音小店交易。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s009": [
+    {
+      "id": "c1780035383763",
+      "user": "admin",
+      "content": "老牌工作室了，口碑一直不错。建议下单前沟通好价格和时间。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s014": [
+    {
+      "id": "c1780035383780",
+      "user": "admin",
+      "content": "闲鱼上信誉良好的跑刀服务，价格适中。推荐新手选择。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s002": [
+    {
+      "id": "c1780035383794",
+      "user": "admin",
+      "content": "价格过低（20r/1000w）需要非常谨慎。市场合理价一般在50-80r/1000w左右。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s006": [
+    {
+      "id": "c1780035383807",
+      "user": "admin",
+      "content": "微信交易的工作室查证困难，建议先找用过的人问问口碑再决定。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s015": [
+    {
+      "id": "c1780035383821",
+      "user": "admin",
+      "content": "QQ工作室需要验证身份，建议选择支持分阶段付款的。不要一次性付清。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s017": [
+    {
+      "id": "c1780035411559",
+      "user": "admin",
+      "content": "部分主播私下接代肝不通过平台，风险较高。建议选择有店铺担保的渠道。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s018": [
+    {
+      "id": "c1780035411576",
+      "user": "admin",
+      "content": "跨多平台低价引流的工作室要格外小心。建议让卖家提供近期成功案例截图验证。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s019": [
+    {
+      "id": "c1780035411590",
+      "user": "admin",
+      "content": "B站视频曝光的押金骗局套路，注意识别。任何要求先交保证金/押金的都建议拒绝。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s021": [
+    {
+      "id": "c1780035411605",
+      "user": "admin",
+      "content": "闲鱼代肝骗局频发，建议保留所有聊天记录和转账凭证，方便被骗后维权。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s022": [
+    {
+      "id": "c1780035411619",
+      "user": "admin",
+      "content": "交保证金=诈骗的概率极高。正规工作室不需要任何形式的保证金。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s023": [
+    {
+      "id": "c1780035411633",
+      "user": "admin",
+      "content": "抖音代练交易风险高，建议通过平台担保交易。索要账号密码的立即拒绝。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s024": [
+    {
+      "id": "c1780035411647",
+      "user": "admin",
+      "content": "河南安阳新骗局，声称无押金但以打点费/审核费等名义收费，多名受害者。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s025": [
+    {
+      "id": "c1780035411661",
+      "user": "admin",
+      "content": "超低价跑刀服务几乎100%有问题。便宜没好货，记得比价。市场价参考50-80r/1000w。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s007": [
+    {
+      "id": "c1780035435915",
+      "user": "admin",
+      "content": "闲鱼上有担保交易的工作室，服务稳定。建议先看评价和交易记录再做决定。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s008": [
+    {
+      "id": "c1780035435929",
+      "user": "admin",
+      "content": "B站工作室请核实UP主账号活跃度和历史记录，警惕新注册号。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s011": [
+    {
+      "id": "c1780035435943",
+      "user": "admin",
+      "content": "低价代练需谨慎，建议要求试单后再决定长期合作。对比多家口碑。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ],
+  "s012": [
+    {
+      "id": "c1780035435956",
+      "user": "admin",
+      "content": "QQ工作室建议使用分阶段付款，不要一次性支付全部费用。",
+      "date": "2026-05-29",
+      "is_admin": true,
+      "status": "approved"
+    }
+  ]
 }
