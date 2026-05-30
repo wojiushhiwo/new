@@ -221,9 +221,16 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   <!-- ============================================ -->
   <div class="panel" id="panel-articles">
     <div class="panel-title">📝 文章管理</div>
-    <div class="widget">
-      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">管理跑刀避坑、骗局拆解、封号预警等资讯文章。</p>
-      <p style="font-size:13px;color:var(--text-secondary);">暂不可编辑，后续版本支持。</p>
+    <div class="flex-between mb-12" style="flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span class="btn btn-outline btn-sm active-filter" data-af="all" onclick="filterArticles('all',this)" style="background:rgba(255,125,41,0.15);border-color:var(--accent);color:var(--accent);">全部</span>
+        <span class="btn btn-outline btn-sm" data-af="published" onclick="filterArticles('published',this)" style="color:var(--safe);">已发布</span>
+        <span class="btn btn-outline btn-sm" data-af="pending" onclick="filterArticles('pending',this)" style="color:var(--warn);">待审核</span>
+      </div>
+      <span class="btn btn-primary btn-sm" onclick="showArticleForm()">+ 新增</span>
+    </div>
+    <div id="articleList" style="display:flex;flex-direction:column;gap:8px;">
+      <div class="empty">加载中...</div>
     </div>
   </div>
 
@@ -412,6 +419,7 @@ function switchPanel(name, el) {
   document.getElementById("panel-"+name).classList.add("active");
   var titles = {dashboard:"📊 仪表盘",articles:"📝 文章管理",reviews:"📮 投稿审核",comments:"💬 评论管理",redblack:"🏆 俱乐部红黑榜",admins:"👥 管理员权限",users:"👤 用户管理",invites:"🔑 邀请码管理",settings:"⚙️ 网站设置"};
   document.getElementById("pageTitle").textContent = titles[name] || name;
+  if (name === "articles") renderArticles();
 }
 
 // ===== Dashboard =====
@@ -553,6 +561,114 @@ async function rejectRB(id) {
   await api("/api/admin/reviews/"+id, {method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"reject"})});
   loadRB();loadDashboard();loadReviews();
 }
+// ===== Articles =====
+var _articleFilter = "all";
+
+function filterArticles(filter, btn) {
+  _articleFilter = filter;
+  var buttons = document.querySelectorAll("[data-af]");
+  buttons.forEach(function(b){ b.classList.remove("active-filter"); b.style.background=""; b.style.borderColor=""; b.style.color=""; });
+  if (btn) { btn.style.background="rgba(255,125,41,0.15)"; btn.style.borderColor="var(--accent)"; btn.style.color="var(--accent)"; }
+  renderArticles();
+}
+
+function renderArticles() {
+  var el = document.getElementById("articleList");
+  if (!el) return;
+  var data = ALL_STUDIOS;
+  if (_articleFilter === "published") data = data.filter(function(s){ return s.status !== "pending"; });
+  else if (_articleFilter === "pending") data = data.filter(function(s){ return s.status === "pending"; });
+  if (data.length === 0) {
+    el.innerHTML = '<div class="empty">暂无数据</div>';
+    return;
+  }
+  var riskLabels = {safe:"✅ 安全", warning:"⚠️ 存疑", danger:"❌ 避雷"};
+  var levelMap = {platinum:"🥇 金牌", gold:"🥉 黄牌", silver:"🥈 银牌"};
+  el.innerHTML = data.map(function(s){
+    var risk = riskLabels[s.risk] || "❌ 避雷";
+    var lv = s.level && levelMap[s.level] ? '<span style="margin-left:6px;font-size:0.75rem;color:#FFD700;">'+levelMap[s.level]+'</span>' : '';
+    var statusBadge = s.status === "pending" ? '<span style="background:var(--warn);color:#000;padding:1px 8px;border-radius:4px;font-size:0.7rem;font-weight:600;margin-left:6px;">待审核</span>' : '';
+    var detailPreview = (s.detail||"").substring(0, 80) + ((s.detail||"").length > 80 ? "…" : "");
+    var contactInfo = s.contact_hidden ? "🔒 隐藏" : (s.contact || "-");
+    return '<div style="background:var(--bg-card);border:1px solid var(--border-light);border-radius:10px;padding:14px 16px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">' +
+        '<div><strong style="color:#fff;font-size:14px;">' + escHtml(s.name) + '</strong>' + lv + statusBadge + '</div>' +
+        '<span style="font-size:0.75rem;padding:2px 10px;border-radius:10px;font-weight:600;' +
+          (s.risk==="safe"?'background:#2ECC7122;color:#2ECC71;':s.risk==="warning"?'background:#FF950022;color:#FF9500;':'background:#FF3B3022;color:#FF3B30;') + '">' + risk + '</span>' +
+      '</div>' +
+      '<div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:8px;line-height:1.6;">' + escHtml(detailPreview) + '</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:6px 14px;font-size:0.75rem;color:var(--text-muted);">' +
+        '<span>📱 ' + escHtml(s.platform||"-") + '</span>' +
+        '<span>🔗 ' + escHtml(contactInfo) + '</span>' +
+        '<span>📅 ' + (s.date||"-") + '</span>' +
+        '<span>📝 ' + escHtml(s.source||"-") + '</span>' +
+      '</div>' +
+      '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;">' +
+        '<span class="btn btn-sm" style="background:var(--blue);color:#fff;cursor:pointer;padding:4px 12px;border-radius:6px;font-size:0.78rem;" onclick="editArticle(\''+s.id+'\')">✏️ 编辑</span>' +
+        '<a href="/studio/'+s.id+'" target="_blank" class="btn btn-sm" style="background:var(--border);color:var(--text-secondary);cursor:pointer;padding:4px 12px;border-radius:6px;font-size:0.78rem;text-decoration:none;display:inline-flex;align-items:center;">🔗 查看</a>' +
+        (s.status === "pending" ? '<span class="btn btn-sm" style="background:var(--safe);color:#000;cursor:pointer;padding:4px 12px;border-radius:6px;font-size:0.78rem;" onclick="approveRB(\''+s.id+'\')">✅ 通过</span>' : '') +
+        (s.status === "pending" ? '<span class="btn btn-sm" style="background:var(--danger);color:#fff;cursor:pointer;padding:4px 12px;border-radius:6px;font-size:0.78rem;" onclick="rejectRB(\''+s.id+'\')">❌ 驳回</span>' : '') +
+        '<span class="btn btn-sm" style="background:var(--danger);color:#fff;cursor:pointer;padding:4px 12px;border-radius:6px;font-size:0.78rem;" onclick="deleteRB(\''+s.id+'\',\''+escHtml(s.name)+'\')">🗑️ 删除</span>' +
+      '</div></div>';
+  }).join("");
+}
+
+function showArticleForm() {
+  var id = "article_" + Date.now();
+  var name = prompt("工作室名称：");
+  if (!name) return;
+  var platform = prompt("平台（闲鱼/抖音/B站/小红书）：");
+  if (!platform) return;
+  var detail = prompt("详情描述：");
+  if (!detail) return;
+  var risk = prompt("评价（safe/warning/danger）：", "danger");
+  if (!risk || ["safe","warning","danger"].indexOf(risk) < 0) { alert("请填 safe/warning/danger"); return; }
+  var source = prompt("来源：", "管理员录入");
+  var contact = prompt("联系方式（选填）：");
+  var date = new Date().toISOString().slice(0,7);
+  var data = {
+    id: id, name: name, platform: platform, detail: detail,
+    risk: risk, source: source || "管理员录入",
+    contact: contact || "", contact_hidden: !contact,
+    date: date, status: "published"
+  };
+  var r = confirm("确定添加 "+name+" ？");
+  if (!r) return;
+  ALL_STUDIOS.push(data);
+  saveStudioList();
+}
+
+function editArticle(id) {
+  var s = ALL_STUDIOS.filter(function(x){ return x.id === id; })[0];
+  if (!s) { alert("未找到该工作室"); return; }
+  var name = prompt("工作室名称：", s.name);
+  if (!name) return;
+  var platform = prompt("平台：", s.platform);
+  if (!platform) return;
+  var detail = prompt("详情描述：", s.detail);
+  if (!detail) return;
+  var risk = prompt("评价（safe/warning/danger）：", s.risk);
+  if (!risk || ["safe","warning","danger"].indexOf(risk) < 0) { alert("请填 safe/warning/danger"); return; }
+  var source = prompt("来源：", s.source);
+  if (!source) return;
+  var contact = prompt("联系方式：", s.contact||"");
+  s.name = name; s.platform = platform; s.detail = detail; s.risk = risk;
+  s.source = source; s.contact = contact;
+  s.contact_hidden = !contact;
+  saveStudioList();
+}
+
+async function saveStudioList() {
+  var r = await api("/api/admin/studios", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({studios: ALL_STUDIOS})});
+  if (r && r.ok) {
+    showToast("✅ 已保存");
+    loadRB();
+    renderArticles();
+  } else {
+    showToast("❌ 保存失败");
+  }
+}
+
 async function deleteRB(id,name) {
   if (!confirm("确定删除 "+name+" ？")) return;
   await api("/api/admin/studios/"+id, {method:"DELETE"});
