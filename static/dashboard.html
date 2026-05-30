@@ -9,53 +9,54 @@
   <style>
     .dashboard-wrap { max-width: 960px; margin: 0 auto; padding: 30px 20px; }
     .dash-header {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      border-radius: 16px;
-      padding: 30px;
-      color: #fff;
+      background: linear-gradient(135deg, #0d0e1a 0%, #1a1c2c 100%);
+      border-radius: 12px;
+      padding: 28px 30px;
+      border: 1px solid var(--border-light);
       margin-bottom: 24px;
     }
-    .dash-welcome { font-size: 1.4rem; font-weight: 700; }
-    .dash-welcome small { font-size: 0.85rem; color: #a0a0b8; font-weight: 400; }
+    .dash-welcome { font-size: 1.4rem; font-weight: 700; color: #fff; }
+    .dash-welcome small { font-size: 0.85rem; color: var(--text-secondary); font-weight: 400; }
     .dash-stats { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
     .dash-stat {
-      background: rgba(255,255,255,0.08);
-      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      padding: 12px 18px;
       border-radius: 10px;
       text-align: center;
       min-width: 80px;
     }
-    .dash-stat-num { display: block; font-size: 1.3rem; font-weight: 700; }
-    .dash-stat-label { font-size: 0.75rem; color: #a0a0b8; }
-    .dash-section { background: #fff; border-radius: 14px; padding: 20px; margin-bottom: 16px; border: 1px solid #e8e8ef; }
-    .dash-section h3 { font-size: 1rem; margin-bottom: 14px; color: #1a1a2e; }
-    .dash-empty { text-align: center; padding: 30px 0; color: #8a8aaa; font-size: 0.9rem; }
+    .dash-stat-num { display: block; font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+    .dash-stat-label { font-size: 0.75rem; color: var(--text-secondary); }
+    .dash-section { background: var(--bg-card); border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border-light); }
+    .dash-section h3 { font-size: 1rem; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); color: var(--text); }
+    .dash-empty { text-align: center; padding: 30px 0; color: var(--text-muted); font-size: 0.9rem; line-height: 2; }
     .dash-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    .dash-table td { padding: 10px 6px; border-bottom: 1px solid #f0f0f5; vertical-align: middle; }
+    .dash-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
     .dash-table tr:last-child td { border-bottom: none; }
-    .badge-sm { display: inline-block; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
-    .badge-danger { background: #fde8e8; color: #e74c3c; }
-    .badge-warning { background: #fef7e0; color: #f39c12; }
-    .badge-safe { background: #e8f8ed; color: #27ae60; }
-    .badge-pending { background: #eef0ff; color: #4a6cf7; }
-    .tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+    .badge-sm { display: inline-block; font-size: 0.7rem; padding: 2px 10px; border-radius: 10px; font-weight: 600; }
+    .badge-danger { background: rgba(255,59,48,0.15); color: var(--danger); }
+    .badge-warning { background: rgba(255,149,0,0.15); color: var(--warn); }
+    .badge-safe { background: rgba(46,204,113,0.15); color: var(--safe); }
+    .badge-pending { background: rgba(22,93,255,0.15); color: var(--blue); }
+    .tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
     .tab-btn {
       padding: 8px 18px;
-      border: 2px solid #d8d8e0;
-      background: #fff;
-      border-radius: 20px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      border-radius: 8px;
       cursor: pointer;
       font-size: 0.85rem;
-      transition: all 0.2s;
+      font-weight: 600;
+      transition: all 0.15s;
     }
-    .tab-btn:hover { border-color: #4a6cf7; }
-    .tab-btn.active { border-color: #4a6cf7; background: #4a6cf7; color: #fff; }
+    .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .tab-btn.active { border-color: var(--accent); background: rgba(255,125,41,0.12); color: var(--accent); }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    .studio-link { color: #4a6cf7; text-decoration: none; }
+    .studio-link { color: var(--blue); text-decoration: none; font-weight: 600; }
     .studio-link:hover { text-decoration: underline; }
-    .member-badge { display: inline-block; margin-left: 8px; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
-    .member-badge.member { background: #e8f8ed; color: #27ae60; }
     @media (max-width: 640px) {
       .dash-header { padding: 20px; }
       .dash-stats { gap: 8px; }
@@ -65,22 +66,16 @@
   </style>
 </head>
 <body>
-  <header class="header">
-    <div class="container">
-      <div class="logo">
-        <span class="logo-icon">🔪</span>
-        <span class="logo-text">跑刀避雷指南</span>
-      </div>
-      <nav>
-        <a href="/">首页</a>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="nav-brand">🔪 <span class="nav-brand-text">避雷指南</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="/" class="nav-link">🏠 首页</a>
+        <a href="/list.html" class="nav-link">📋 黑名单</a>
         <span id="navLogin"></span>
-        <a href="list.html">黑名单</a>
-        <a href="list.html?platform=闲鱼">闲鱼</a>
-        <a href="list.html?platform=抖音">抖音</a>
-        <a href="list.html?platform=B站">B站</a>
-      </nav>
+      </div>
     </div>
-  </header>
+  </nav>
 
   <div class="dashboard-wrap" id="dashApp">
     <!-- 头部 -->
@@ -185,14 +180,14 @@
         var r = await fetch("/api/user/submissions");
         var d = await r.json();
         if (!d.submissions || d.submissions.length === 0) {
-          el.innerHTML = '<p class="dash-empty">你还没有投过稿 😕<br><a href="submit.html" style="color:#4a6cf7;font-size:0.85rem;">去曝光一个工作室 →</a></p>';
+          el.innerHTML = '<p class="dash-empty">你还没有投过稿 😕<br><a href="submit.html" style="color:var(--blue);font-size:0.85rem;">去曝光一个工作室 →</a></p>';
           return;
         }
         var html = '<table class="dash-table">';
         d.submissions.forEach(function(s) {
           var riskLabel = {danger: '<span class="badge-sm badge-danger">🔴 黑</span>', warning: '<span class="badge-sm badge-warning">🟡 存疑</span>', safe: '<span class="badge-sm badge-safe">🟢 白</span>'};
           var statusLabel = s.status === "pending" ? '<span class="badge-sm badge-pending">待审核</span>' : '<span class="badge-sm badge-safe">已发布</span>';
-          html += '<tr><td>' + escHtml(s.name) + '</td><td>' + (riskLabel[s.risk] || '') + '</td><td>' + statusLabel + '</td><td style="color:#a0a0b8;font-size:0.8rem;">' + (s.date || '') + '</td></tr>';
+          html += '<tr><td>' + escHtml(s.name) + '</td><td>' + (riskLabel[s.risk] || '') + '</td><td>' + statusLabel + '</td><td style="color:var(--text-muted);font-size:0.8rem;">' + (s.date || '') + '</td></tr>';
         });
         html += '</table>';
         el.innerHTML = html;
@@ -206,12 +201,12 @@
         var r = await fetch("/api/user/comments");
         var d = await r.json();
         if (!d.comments || d.comments.length === 0) {
-          el.innerHTML = '<p class="dash-empty">你还没有评论过 😕<br><small style="color:#a0a0b8;">在工作室详情页面可以发表评论</small></p>';
+          el.innerHTML = '<p class="dash-empty">你还没有评论过 😕<br><small style="color:var(--text-muted);">在工作室详情页面可以发表评论</small></p>';
           return;
         }
         var html = '<table class="dash-table">';
         d.comments.forEach(function(c) {
-          html += '<tr><td><a href="/list.html#studio-' + escHtml(c.studio_id) + '" class="studio-link">' + escHtml(c.studio_name || c.studio_id) + '</a></td><td style="color:#555;">' + escHtml(c.content.substring(0, 40)) + (c.content.length > 40 ? '...' : '') + '</td><td style="color:#a0a0b8;font-size:0.8rem;">' + (c.date || '') + '</td></tr>';
+          html += '<tr><td><a href="/list.html#studio-' + escHtml(c.studio_id) + '" class="studio-link">' + escHtml(c.studio_name || c.studio_id) + '</a></td><td style="color:var(--text-secondary);">' + escHtml(c.content.substring(0, 40)) + (c.content.length > 40 ? '...' : '') + '</td><td style="color:var(--text-muted);font-size:0.8rem;">' + (c.date || '') + '</td></tr>';
         });
         html += '</table>';
         el.innerHTML = html;
@@ -225,7 +220,7 @@
         var r = await fetch("/api/favorites");
         var d = await r.json();
         if (!d.favorites || d.favorites.length === 0) {
-          el.innerHTML = '<p class="dash-empty">还没有收藏的工作室 😕<br><small style="color:#a0a0b8;">在列表页点击 ⭐ 即可收藏</small></p>';
+          el.innerHTML = '<p class="dash-empty">还没有收藏的工作室 😕<br><small style="color:var(--text-muted);">在列表页点击 ⭐ 即可收藏</small></p>';
           return;
         }
         // 加载工作室详情
@@ -239,9 +234,9 @@
           var s = studioMap[id];
           if (s) {
             var riskLabel = {danger: '<span class="badge-sm badge-danger">🔴 黑</span>', warning: '<span class="badge-sm badge-warning">🟡 存疑</span>', safe: '<span class="badge-sm badge-safe">🟢 白</span>'};
-            html += '<tr><td><a href="/list.html#studio-' + escHtml(s.id) + '" class="studio-link">' + escHtml(s.name) + '</a></td><td>' + (riskLabel[s.risk] || '') + '</td><td style="color:#a0a0b8;font-size:0.8rem;">' + escHtml(s.platform || '') + '</td></tr>';
+            html += '<tr><td><a href="/list.html#studio-' + escHtml(s.id) + '" class="studio-link">' + escHtml(s.name) + '</a></td><td>' + (riskLabel[s.risk] || '') + '</td><td style="color:var(--text-muted);font-size:0.8rem;">' + escHtml(s.platform || '') + '</td></tr>';
           } else {
-            html += '<tr><td style="color:#a0a0b8;">' + escHtml(id) + '</td></tr>';
+            html += '<tr><td style="color:var(--text-muted);">' + escHtml(id) + '</td></tr>';
           }
         });
         html += '</table>';
