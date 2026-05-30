@@ -103,5 +103,68 @@
 
   
   <script src="js/app.js?v=1779902000"></script>
+<script>
+(function(){
+  var form = document.getElementById("reportForm");
+  var success = document.getElementById("submitSuccess");
+  if (!form) return;
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    var name = document.getElementById("studioName").value.trim();
+    var platform = document.getElementById("platform").value;
+    var contact = document.getElementById("contact").value.trim();
+    var detail = document.getElementById("detail").value.trim();
+    var contactBack = document.getElementById("contactBack").value.trim();
+
+    // Get selected risk
+    var risk = "warning";
+    var radios = document.getElementsByName("risk");
+    for (var i = 0; i < radios.length; i++) {
+      if (radios[i].checked) { risk = radios[i].value; break; }
+    }
+
+    if (!name) { alert("请填写工作室名称"); return; }
+    if (!detail) { alert("请填写详细经过"); return; }
+
+    var btn = form.querySelector(".btn-submit");
+    btn.disabled = true;
+    btn.textContent = "提交中...";
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/report", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onload = function() {
+      btn.disabled = false;
+      btn.textContent = "提交曝光";
+      if (xhr.status === 200) {
+        form.style.display = "none";
+        success.style.display = "block";
+      } else {
+        try {
+          var d = JSON.parse(xhr.responseText);
+          alert(d.error || "提交失败，请稍后重试");
+        } catch(e) {
+          alert("提交失败，请稍后重试");
+        }
+      }
+    };
+    xhr.onerror = function() {
+      btn.disabled = false;
+      btn.textContent = "提交曝光";
+      alert("网络错误，请稍后重试");
+    };
+    xhr.send(JSON.stringify({
+      name: name,
+      platform: platform,
+      contact: contact,
+      risk: risk,
+      detail: detail,
+      contact_back: contactBack
+    }));
+  });
+})();
+</script>
 </body>
 </html>
