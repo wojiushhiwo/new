@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """跑刀避雷指南 - Flask Backend"""
 import os, json, hashlib, secrets, re, time, random
-from flask import Flask, render_template_string, request, redirect, url_for, session, send_from_directory, jsonify
+from flask import Flask, render_template_string, request, redirect, url_for, session, send_from_directory, jsonify, make_response
 from functools import wraps
 
 app = Flask(__name__)
@@ -552,7 +552,11 @@ def admin_moderate_comment(comment_id):
 def admin_page():
     if not has_permission(session.get("user")):
         return redirect(url_for("index"))
-    return send_from_directory(STATIC_DIR, "admin.html")
+    resp = make_response(send_from_directory(STATIC_DIR, "admin.html"))
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
+    return resp
 
 @app.route("/api/admin/studios", methods=["GET"])
 @admin_required
