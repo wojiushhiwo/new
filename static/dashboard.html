@@ -16,14 +16,23 @@
       --text-secondary: #8888aa;
       --text-muted: #666;
       --accent: #FF7D29;
+      --accent-dim: rgba(255,125,41,0.10);
       --blue: #165DFF;
       --safe: #2ECC71;
       --danger: #FF3B30;
       --warn: #FF9500;
     }
-    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; margin:0; }
-    a { color: var(--accent); }
-    a:hover { text-decoration: underline; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { opacity: 0.85; }
+
+    /* Nav */
     .navbar {
       position: sticky; top: 0; z-index: 100;
       background: rgba(20,22,34,0.92);
@@ -31,119 +40,228 @@
       -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border-light);
     }
+    .navbar .container {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px; padding: 0 20px;
+    }
     .nav-links { display: flex; gap: 2px; }
     .nav-link {
       padding: 6px 14px; border-radius: 20px; font-size: 13px;
       color: rgba(255,255,255,0.55); font-weight: 500; transition: 0.2s;
     }
-    .nav-link:hover { color: #fff; text-decoration: none; background: rgba(255,255,255,0.06); }
-    .dashboard-wrap { max-width: 960px; margin: 0 auto; padding: 30px 20px; }
-    .dash-header {
-      background: linear-gradient(135deg, #0d0e1a 0%, #1a1c2c 100%);
+    .nav-link:hover { color: #fff; background: rgba(255,255,255,0.06); }
+
+    /* Dashboard layout - two column */
+    .dash-wrap {
+      max-width: 1100px; margin: 0 auto; padding: 30px 20px;
+      display: grid; grid-template-columns: 280px 1fr; gap: 24px;
+    }
+
+    /* Left sidebar - profile card */
+    .profile-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
       border-radius: 12px;
-      padding: 28px 30px;
-      border: 1px solid var(--border-light);
-      margin-bottom: 24px;
-    }
-    .dash-welcome { font-size: 1.4rem; font-weight: 700; color: #fff; }
-    .dash-welcome small { font-size: 0.85rem; color: var(--text-secondary); font-weight: 400; }
-    .dash-stats { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
-    .dash-stat {
-      background: var(--bg-card);
-      border: 1px solid var(--border-light);
-      padding: 12px 18px;
-      border-radius: 10px;
+      padding: 28px 20px;
       text-align: center;
-      min-width: 80px;
+      position: sticky; top: 86px;
     }
-    .dash-stat-num { display: block; font-size: 1.3rem; font-weight: 700; color: var(--accent); }
-    .dash-stat-label { font-size: 0.75rem; color: var(--text-secondary); }
-    .dash-section { background: var(--bg-card); border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border-light); }
-    .dash-section h3 { font-size: 1rem; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); color: var(--text); }
-    .dash-empty { text-align: center; padding: 30px 0; color: var(--text-muted); font-size: 0.9rem; line-height: 2; }
-    .dash-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    .dash-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
-    .dash-table tr:last-child td { border-bottom: none; }
-    .badge-sm { display: inline-block; font-size: 0.7rem; padding: 2px 10px; border-radius: 10px; font-weight: 600; }
-    .badge-danger { background: rgba(255,59,48,0.15); color: var(--danger); }
-    .badge-warning { background: rgba(255,149,0,0.15); color: var(--warn); }
-    .badge-safe { background: rgba(46,204,113,0.15); color: var(--safe); }
-    .badge-pending { background: rgba(22,93,255,0.15); color: var(--blue); }
-    .tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+    .profile-avatar {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--accent), #FF5500);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; margin: 0 auto 14px;
+      box-shadow: 0 4px 20px rgba(255,125,41,0.25);
+    }
+    .profile-name {
+      font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 4px;
+    }
+    .profile-bio {
+      font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px;
+    }
+    .profile-stats {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      margin-top: 4px;
+    }
+    .profile-stat {
+      text-align: center;
+    }
+    .profile-stat-num {
+      display: block; font-size: 1.15rem; font-weight: 700; color: #fff;
+    }
+    .profile-stat-label {
+      display: block; font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;
+    }
+
+    /* Hero banner (like the purple section in ref) */
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(255,125,41,0.12) 0%, rgba(255,85,0,0.08) 100%);
+      border: 1px solid rgba(255,125,41,0.15);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hero-banner h2 {
+      font-size: 1.15rem; color: var(--accent); font-weight: 700;
+    }
+    .hero-banner p {
+      font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 2px; margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
     .tab-btn {
-      padding: 8px 18px;
-      border: 1px solid var(--border-light);
-      background: var(--bg-card);
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
       color: var(--text-secondary);
-      border-radius: 8px;
-      cursor: pointer;
       font-size: 0.85rem;
       font-weight: 600;
+      cursor: pointer;
       transition: all 0.15s;
     }
-    .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .tab-btn.active { border-color: var(--accent); background: rgba(255,125,41,0.12); color: var(--accent); }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Content sections */
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    .studio-link { color: var(--blue); text-decoration: none; font-weight: 600; }
-    .studio-link:hover { text-decoration: underline; }
-    @media (max-width: 640px) {
-      .dash-header { padding: 20px; }
-      .dash-stats { gap: 8px; }
-      .dash-stat { min-width: 70px; padding: 8px 12px; }
-      .dash-table { font-size: 0.8rem; }
+
+    .dash-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .dash-section-title {
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .dash-empty {
+      text-align: center; padding: 40px 20px;
+      color: var(--text-muted); font-size: 0.9rem; line-height: 2;
+    }
+
+    /* Table strips */
+    .dash-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+    .dash-row:last-child { border-bottom: none; }
+    .dash-row:hover { background: rgba(255,255,255,0.02); }
+    .dash-row-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .dash-row-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .dash-row-name { font-size: 0.85rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dash-row-sub { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+    .dash-row-text { font-size: 0.82rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 360px; }
+
+    /* Badges */
+    .bdg {
+      display: inline-block; padding: 2px 10px; border-radius: 10px;
+      font-size: 0.7rem; font-weight: 600; flex-shrink: 0;
+    }
+    .bdg-danger { background: rgba(255,59,48,0.15); color: var(--danger); }
+    .bdg-warning { background: rgba(255,149,0,0.15); color: var(--warn); }
+    .bdg-safe { background: rgba(46,204,113,0.15); color: var(--safe); }
+    .bdg-pending { background: rgba(22,93,255,0.15); color: var(--blue); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .dash-wrap { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
+      .profile-card { position: static; }
+      .hero-banner { padding: 18px; }
+      .dash-row { flex-wrap: wrap; gap: 6px; }
     }
   </style>
 </head>
 <body>
   <nav class="navbar">
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;height:56px;">
+    <div class="container">
       <a href="/" style="font-size:17px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;">🔪 避雷指南</a>
       <div class="nav-links" id="navLinks">
         <a href="/" class="nav-link">🏠 首页</a>
         <a href="/list.html" class="nav-link">📋 黑名单</a>
+        <a href="/submit.html" class="nav-link">📢 曝光</a>
         <span id="navLogin"></span>
       </div>
     </div>
   </nav>
 
-  <div class="dashboard-wrap" id="dashApp">
-    <!-- 头部 -->
-    <div class="dash-header">
-      <div class="dash-welcome" id="dashWelcome">加载中...</div>
-      <div class="dash-stats" id="dashStats"></div>
-    </div>
-
-    <!-- Tabs -->
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchDashTab('submissions', this)">📄 我的投稿</button>
-      <button class="tab-btn" onclick="switchDashTab('comments', this)">💬 我的评论</button>
-      <button class="tab-btn" onclick="switchDashTab('favorites', this)">⭐ 我的收藏</button>
-    </div>
-
-    <!-- 投稿 -->
-    <div class="tab-content active" id="tab-submissions">
-      <div class="dash-section">
-        <h3>📄 我投稿的工作室</h3>
-        <div id="dashSubmissions"><p class="dash-empty">加载中...</p></div>
+  <div class="dash-wrap" id="dashApp">
+    <!-- 左侧：个人资料卡 -->
+    <aside class="profile-card" id="profileCard">
+      <div class="profile-avatar" id="dashAvatar">👤</div>
+      <div class="profile-name" id="dashName">加载中...</div>
+      <div class="profile-bio" id="dashBio">跑刀避雷指南</div>
+      <div class="profile-stats" id="dashStats">
+        <div class="profile-stat"><span class="profile-stat-num">-</span><span class="profile-stat-label">投稿</span></div>
+        <div class="profile-stat"><span class="profile-stat-num">-</span><span class="profile-stat-label">评论</span></div>
+        <div class="profile-stat"><span class="profile-stat-num">-</span><span class="profile-stat-label">收藏</span></div>
       </div>
-    </div>
+    </aside>
 
-    <!-- 评论 -->
-    <div class="tab-content" id="tab-comments">
-      <div class="dash-section">
-        <h3>💬 我的评论</h3>
-        <div id="dashComments"><p class="dash-empty">加载中...</p></div>
+    <!-- 右侧：主内容 -->
+    <main>
+      <!-- 横幅 -->
+      <div class="hero-banner">
+        <div>
+          <h2>👋 欢迎回来</h2>
+          <p id="dashWelcome">查看你的投稿、评论和收藏</p>
+        </div>
+        <a href="/submit.html" style="display:inline-flex;align-items:center;gap:4px;padding:8px 18px;background:var(--accent);color:#000;border-radius:8px;font-size:0.85rem;font-weight:600;">📢 曝光投稿</a>
       </div>
-    </div>
 
-    <!-- 收藏 -->
-    <div class="tab-content" id="tab-favorites">
-      <div class="dash-section">
-        <h3>⭐ 我收藏的工作室</h3>
-        <div id="dashFavorites"><p class="dash-empty">加载中...</p></div>
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchDashTab('submissions', this)">📄 我的投稿</button>
+        <button class="tab-btn" onclick="switchDashTab('comments', this)">💬 我的评论</button>
+        <button class="tab-btn" onclick="switchDashTab('favorites', this)">⭐ 我的收藏</button>
       </div>
-    </div>
+
+      <!-- 投稿 -->
+      <div class="tab-content active" id="tab-submissions">
+        <div class="dash-section">
+          <div class="dash-section-title">📄 我投稿的工作室</div>
+          <div id="dashSubmissions"><p class="dash-empty">加载中...</p></div>
+        </div>
+      </div>
+
+      <!-- 评论 -->
+      <div class="tab-content" id="tab-comments">
+        <div class="dash-section">
+          <div class="dash-section-title">💬 我的评论</div>
+          <div id="dashComments"><p class="dash-empty">加载中...</p></div>
+        </div>
+      </div>
+
+      <!-- 收藏 -->
+      <div class="tab-content" id="tab-favorites">
+        <div class="dash-section">
+          <div class="dash-section-title">⭐ 我收藏的工作室</div>
+          <div id="dashFavorites"><p class="dash-empty">加载中...</p></div>
+        </div>
+      </div>
+    </main>
   </div>
 
   <footer class="footer">
@@ -157,124 +275,143 @@
   <script>
     var CURRENT_USER = null;
 
-    // ===== Fetch current user =====
     async function loadUser() {
       try {
         var r = await fetch("/api/session");
         var d = await r.json();
         CURRENT_USER = d.user;
       } catch(e) { CURRENT_USER = null; }
-      // 如果没登录，踢回首页
       if (!CURRENT_USER) { window.location.href = "/"; return; }
     }
 
-    // ===== Init =====
     async function initDashboard() {
       await loadUser();
       if (!CURRENT_USER) return;
       
-      // 更新导航栏
       updateNav();
+      document.getElementById("dashWelcome").textContent = CURRENT_USER + "，这里是你的个人面板";
+      document.getElementById("dashName").textContent = CURRENT_USER;
 
-      // 加载数据
+      // 头像 emoji — 从用户名取首字决定
+      var firstChar = CURRENT_USER.charCodeAt(0) || 65;
+      var emojis = ["🦊","🐱","🐶","🐰","🦁","🐼","🐸","🐧","🦄","🐲","🐳","🦋","🐙","🦀","🦔"];
+      if (CURRENT_USER === "admin") {
+        document.getElementById("dashAvatar").textContent = "🛡️";
+      } else {
+        document.getElementById("dashAvatar").textContent = emojis[firstChar % emojis.length];
+      }
+
       loadStats();
       loadSubmissions();
       loadComments();
       loadFavorites();
     }
 
-    // ===== Stats =====
     async function loadStats() {
-      document.getElementById("dashWelcome").innerHTML = "👋 欢迎回来，" + escHtml(CURRENT_USER) + "<br><small>这里是你的个人面板</small>";
-      
       try {
         var r = await fetch("/api/dashboard/stats");
         var d = await r.json();
-        var html = "";
         var items = [
           { num: d.submissions || 0, label: "投稿" },
           { num: d.comments || 0, label: "评论" },
           { num: d.favorites || 0, label: "收藏" }
         ];
+        var html = "";
         items.forEach(function(item) {
-          html += '<div class="dash-stat"><span class="dash-stat-num">' + item.num + '</span><span class="dash-stat-label">' + item.label + '</span></div>';
+          html += '<div class="profile-stat"><span class="profile-stat-num">' + item.num + '</span><span class="profile-stat-label">' + item.label + '</span></div>';
         });
         document.getElementById("dashStats").innerHTML = html;
       } catch(e) {}
     }
 
-    // ===== Submissions =====
+    function renderRows(arr, type) {
+      if (!arr || arr.length === 0) {
+        var msgs = {
+          submissions: ['你还没有投过稿 😕', '<a href="/submit.html" style="color:var(--accent);">去曝光一个工作室 →</a>'],
+          comments: ['你还没有评论过 😕', '<span style="color:var(--text-muted);">在工作室详情页面可以发表评论</span>'],
+          favorites: ['还没有收藏的工作室 😕', '<span style="color:var(--text-muted);">在列表页点击 ⭐ 即可收藏</span>']
+        };
+        var m = msgs[type] || ['暂无数据'];
+        return '<p class="dash-empty">' + m[0] + '<br>' + (m[1] || '') + '</p>';
+      }
+      return arr.map(function(item) { return item; }).join("");
+    }
+
     async function loadSubmissions() {
       var el = document.getElementById("dashSubmissions");
       try {
         var r = await fetch("/api/user/submissions");
         var d = await r.json();
         if (!d.submissions || d.submissions.length === 0) {
-          el.innerHTML = '<p class="dash-empty">你还没有投过稿 😕<br><a href="submit.html" style="color:var(--blue);font-size:0.85rem;">去曝光一个工作室 →</a></p>';
+          el.innerHTML = '<p class="dash-empty">你还没有投过稿 😕<br><a href="/submit.html" style="color:var(--accent);font-weight:600;">去曝光一个工作室 →</a></p>';
           return;
         }
-        var html = '<table class="dash-table">';
-        d.submissions.forEach(function(s) {
-          var riskLabel = {danger: '<span class="badge-sm badge-danger">🔴 黑</span>', warning: '<span class="badge-sm badge-warning">🟡 存疑</span>', safe: '<span class="badge-sm badge-safe">🟢 白</span>'};
-          var statusLabel = s.status === "pending" ? '<span class="badge-sm badge-pending">待审核</span>' : '<span class="badge-sm badge-safe">已发布</span>';
-          html += '<tr><td>' + escHtml(s.name) + '</td><td>' + (riskLabel[s.risk] || '') + '</td><td>' + statusLabel + '</td><td style="color:var(--text-muted);font-size:0.8rem;">' + (s.date || '') + '</td></tr>';
-        });
-        html += '</table>';
-        el.innerHTML = html;
+        var riskLabel = {danger: '<span class="bdg bdg-danger">🔴 黑</span>', warning: '<span class="bdg bdg-warning">🟡 存疑</span>', safe: '<span class="bdg bdg-safe">🟢 白</span>'};
+        var rows = d.submissions.map(function(s) {
+          var statusBadge = s.status === "pending" ? '<span class="bdg bdg-pending">待审核</span>' : '<span class="bdg bdg-safe">已发布</span>';
+          return '<div class="dash-row"><div class="dash-row-left">' +
+            '<span class="dash-row-name">' + escHtml(s.name) + '</span>' +
+            '<span class="dash-row-sub">' + (s.date || '') + '</span>' +
+          '</div><div class="dash-row-right">' +
+            (riskLabel[s.risk] || '') + statusBadge +
+          '</div></div>';
+        }).join("");
+        el.innerHTML = rows;
       } catch(e) { el.innerHTML = '<p class="dash-empty">加载失败</p>'; }
     }
 
-    // ===== Comments =====
     async function loadComments() {
       var el = document.getElementById("dashComments");
       try {
         var r = await fetch("/api/user/comments");
         var d = await r.json();
         if (!d.comments || d.comments.length === 0) {
-          el.innerHTML = '<p class="dash-empty">你还没有评论过 😕<br><small style="color:var(--text-muted);">在工作室详情页面可以发表评论</small></p>';
+          el.innerHTML = '<p class="dash-empty">你还没有评论过 😕<br><span style="color:var(--text-muted);">在工作室详情页面可以发表评论</span></p>';
           return;
         }
-        var html = '<table class="dash-table">';
-        d.comments.forEach(function(c) {
-          html += '<tr><td><a href="/list.html#studio-' + escHtml(c.studio_id) + '" class="studio-link">' + escHtml(c.studio_name || c.studio_id) + '</a></td><td style="color:var(--text-secondary);">' + escHtml(c.content.substring(0, 40)) + (c.content.length > 40 ? '...' : '') + '</td><td style="color:var(--text-muted);font-size:0.8rem;">' + (c.date || '') + '</td></tr>';
-        });
-        html += '</table>';
-        el.innerHTML = html;
+        var rows = d.comments.map(function(c) {
+          return '<div class="dash-row"><div class="dash-row-left">' +
+            '<span class="dash-row-name">' + (c.studio_name || c.studio_id) + '</span>' +
+            '<span class="dash-row-text">' + escHtml(c.content.substring(0, 50)) + (c.content.length > 50 ? '…' : '') + '</span>' +
+          '</div><div class="dash-row-right">' +
+            '<span class="dash-row-sub">' + (c.date || '') + '</span>' +
+          '</div></div>';
+        }).join("");
+        el.innerHTML = rows;
       } catch(e) { el.innerHTML = '<p class="dash-empty">加载失败</p>'; }
     }
 
-    // ===== Favorites =====
     async function loadFavorites() {
       var el = document.getElementById("dashFavorites");
       try {
         var r = await fetch("/api/favorites");
         var d = await r.json();
         if (!d.favorites || d.favorites.length === 0) {
-          el.innerHTML = '<p class="dash-empty">还没有收藏的工作室 😕<br><small style="color:var(--text-muted);">在列表页点击 ⭐ 即可收藏</small></p>';
+          el.innerHTML = '<p class="dash-empty">还没有收藏的工作室 😕<br><span style="color:var(--text-muted);">在列表页点击 ⭐ 即可收藏</span></p>';
           return;
         }
-        // 加载工作室详情
         var sr = await fetch("/api/studios");
         var sd = await sr.json();
         var studioMap = {};
         (sd.studios || []).forEach(function(s) { studioMap[s.id] = s; });
 
-        var html = '<table class="dash-table">';
-        d.favorites.forEach(function(id) {
+        var riskLabel = {danger: '<span class="bdg bdg-danger">🔴 黑</span>', warning: '<span class="bdg bdg-warning">🟡 存疑</span>', safe: '<span class="bdg bdg-safe">🟢 白</span>'};
+        var rows = d.favorites.map(function(id) {
           var s = studioMap[id];
           if (s) {
-            var riskLabel = {danger: '<span class="badge-sm badge-danger">🔴 黑</span>', warning: '<span class="badge-sm badge-warning">🟡 存疑</span>', safe: '<span class="badge-sm badge-safe">🟢 白</span>'};
-            html += '<tr><td><a href="/list.html#studio-' + escHtml(s.id) + '" class="studio-link">' + escHtml(s.name) + '</a></td><td>' + (riskLabel[s.risk] || '') + '</td><td style="color:var(--text-muted);font-size:0.8rem;">' + escHtml(s.platform || '') + '</td></tr>';
-          } else {
-            html += '<tr><td style="color:var(--text-muted);">' + escHtml(id) + '</td></tr>';
+            return '<div class="dash-row"><div class="dash-row-left">' +
+              '<span class="dash-row-name">' + escHtml(s.name) + '</span>' +
+              '<span class="dash-row-sub">' + escHtml(s.platform || '') + '</span>' +
+            '</div><div class="dash-row-right">' +
+              (riskLabel[s.risk] || '') +
+            '</div></div>';
           }
-        });
-        html += '</table>';
-        el.innerHTML = html;
+          return '<div class="dash-row"><span class="dash-row-text" style="color:var(--text-muted);">' + escHtml(id) + '（已删除）</span></div>';
+        }).join("");
+        el.innerHTML = rows;
       } catch(e) { el.innerHTML = '<p class="dash-empty">加载失败</p>'; }
     }
 
-    // ===== Tab Switch =====
     function switchDashTab(tab, btn) {
       document.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
       document.querySelectorAll(".tab-content").forEach(function(c) { c.classList.remove("active"); });
@@ -282,7 +419,6 @@
       document.getElementById("tab-" + tab).classList.add("active");
     }
 
-    // ===== Page Init =====
     document.addEventListener("DOMContentLoaded", initDashboard);
   </script>
 </body>
