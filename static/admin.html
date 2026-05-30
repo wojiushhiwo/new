@@ -53,6 +53,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .tag-pending{background:rgba(255,149,0,0.18);color:var(--warn)}
 .tag-published{background:rgba(46,204,113,0.18);color:var(--safe)}
 .tag-rejected{background:rgba(255,59,48,0.18);color:var(--danger)}
+.tag-safe{background:rgba(46,204,113,0.18);color:var(--safe)}
 .tag-source{background:rgba(90,100,180,0.15);color:#8a98d0}
 .tag-role-super{background:rgba(255,215,0,0.15);color:#FFD700}
 .tag-role-admin{background:rgba(22,93,255,0.15);color:var(--blue)}
@@ -239,11 +240,16 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   <!-- ============================================ -->
   <div class="panel" id="panel-reviews">
     <div class="panel-title">📮 投稿审核</div>
-    <div class="widget">
-      <div class="flex-between mb-12">
-        <span style="font-size:13px;color:var(--text-secondary);">待审核投稿将在此处显示</span>
-        <span class="btn btn-outline btn-sm" onclick="loadReviews()">🔄 刷新</span>
+    <div class="flex-between mb-12" style="flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span class="btn btn-outline btn-sm active-filter" data-rv="pending" onclick="filterReviews('pending',this)" style="background:rgba(255,125,41,0.15);border-color:var(--accent);color:var(--accent);">⏳ 待审核</span>
+        <span class="btn btn-outline btn-sm" data-rv="approved" onclick="filterReviews('approved',this)" style="color:var(--safe);">✅ 已通过</span>
+        <span class="btn btn-outline btn-sm" data-rv="rejected" onclick="filterReviews('rejected',this)" style="color:var(--danger);">❌ 已驳回</span>
+        <span class="btn btn-outline btn-sm" data-rv="all" onclick="filterReviews('all',this)" style="color:var(--text-secondary);">全部</span>
       </div>
+      <span class="btn btn-outline btn-sm" onclick="loadReviews()">🔄 刷新</span>
+    </div>
+    <div class="widget">
       <table>
         <thead><tr><th>工作室</th><th>平台</th><th>详细</th><th>来源</th><th>日期</th><th>状态</th><th>操作</th></tr></thead>
         <tbody id="reviewTableBody"><tr><td colspan="7" class="empty">加载中...</td></tr></tbody>
@@ -473,19 +479,49 @@ async function loadDashboard() {
 }
 
 // ===== Reviews =====
+var _reviewFilter = "pending";
+
+function filterReviews(filter, btn) {
+  _reviewFilter = filter;
+  document.querySelectorAll("[data-rv]").forEach(function(b){ b.style.background=""; b.style.borderColor=""; b.style.color=""; });
+  if (btn) { btn.style.background="rgba(255,125,41,0.15)"; btn.style.borderColor="var(--accent)"; btn.style.color="var(--accent)"; }
+  loadReviews();
+}
+
+function reviewStatusTag(status) {
+  if (status === "pending") return '<span class="tag tag-pending">⏳ 待审核</span>';
+  if (status === "rejected") return '<span class="tag tag-rejected">❌ 已驳回</span>';
+  return '<span class="tag tag-safe">✅ 已通过</span>';
+}
+
 async function loadReviews() {
-  var d = await api("/api/admin/reviews");
+  var d = await api("/api/studios");
   var tbody = document.getElementById("reviewTableBody");
-  if (!d || !d.pending) { tbody.innerHTML='<tr><td colspan="7" class="empty">暂无待审核投稿</td></tr>'; return; }
-  if (d.pending.length===0) { tbody.innerHTML='<tr><td colspan="7" class="empty">暂无待审核投稿 ✅</td></tr>'; return; }
-  tbody.innerHTML = d.pending.map(function(s){
+  if (!d || !d.studios) { tbody.innerHTML='<tr><td colspan="7" class="empty">暂无数据</td></tr>'; return; }
+  var data = d.studios;
+  if (_reviewFilter === "pending") data = data.filter(function(s){ return s.status === "pending"; });
+  else if (_reviewFilter === "approved") data = data.filter(function(s){ return s.status !== "pending" && s.status !== "rejected"; });
+  else if (_reviewFilter === "rejected") data = data.filter(function(s){ return s.status === "rejected"; });
+  if (data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无' + ({pending:"待审核",approved:"已通过",rejected:"已驳回",all:""}[_reviewFilter]||"") + '投稿</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(function(s){
+    var actions = '';
+    if (s.status === "pending") {
+      actions = '<span class="action-btn" onclick="approveRB(\''+s.id+'\')">✅ 通过</span> <span class="action-btn danger" onclick="rejectRB(\''+s.id+'\')">❌ 驳回</span>';
+    } else if (s.status === "rejected") {
+      actions = '<span class="action-btn" onclick="approveRB(\''+s.id+'\')">↩️ 恢复</span> <span class="action-btn danger" onclick="deleteRB(\''+s.id+'\',\''+escHtml(s.name).replace(/'/g,"\\'")+'\')">🗑️ 删除</span>';
+    } else {
+      actions = '<span class="action-btn" onclick="rejectRB(\''+s.id+'\')">❌ 驳回</span> <span class="action-btn danger" onclick="deleteRB(\''+s.id+'\',\''+escHtml(s.name).replace(/'/g,"\\'")+'\')">🗑️ 删除</span>';
+    }
     return '<tr><td style="color:#fff;font-weight:600;">'+escHtml(s.name)+'</td>'+
       '<td>'+escHtml(s.platform||"-")+'</td>'+
-      '<td style="font-size:12px;color:#999abb;">'+escHtml((s.detail||"").substring(0,40)+((s.detail||"").length>40?"…":""))+'</td>'+
+      '<td style="font-size:12px;color:#999abb;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+escHtml((s.detail||"").substring(0,50)+((s.detail||"").length>50?"…":""))+'</td>'+
       '<td><span class="tag tag-source">📝 '+escHtml(s.source||"用户投稿")+'</span></td>'+
       '<td style="font-size:12px;">'+(s.date||"-")+'</td>'+
-      '<td><span class="tag tag-pending">⏳ 待审核</span></td>'+
-      '<td><span class="action-btn" onclick="approveRB(\''+s.id+'\')">✅</span> <span class="action-btn danger" onclick="rejectRB(\''+s.id+'\')">❌</span></td></tr>';
+      '<td>'+reviewStatusTag(s.status)+'</td>'+
+      '<td>'+actions+'</td></tr>';
   }).join("");
 }
 
