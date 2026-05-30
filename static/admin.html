@@ -88,6 +88,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 /* Scrollbar */
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-thumb{background:#2a2d44;border-radius:3px}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 /* Responsive */
 @media(max-width:768px){.sidebar{width:56px}.sidebar-brand span:not(.logo-emoji),.sidebar-item span:not(.menu-icon){display:none}.sidebar-item{padding:12px;justify-content:center}.main{padding:16px}.stats-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -361,6 +362,14 @@ async function api(path, opts) {
 }
 
 function escHtml(t) { if(typeof t!=="string")return t||""; var d=document.createElement("div"); d.textContent=t; return d.innerHTML; }
+
+function showToast(msg) {
+  var t = document.createElement("div");
+  t.style.cssText = "position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--border-light);color:#fff;padding:10px 24px;border-radius:10px;font-size:14px;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.4);animation:fadeIn 0.25s;";
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.opacity="0"; t.style.transition="opacity 0.3s"; setTimeout(function(){ t.remove(); },300); }, 2500);
+}
 
 // ===== Init =====
 async function init() {
@@ -652,11 +661,32 @@ async function loadSettings() {
   var form = document.getElementById("settingsForm");
   if (!d) { form.innerHTML='<div class="empty">加载失败</div>'; return; }
   form.innerHTML = Object.entries(d).filter(function(e){return typeof e[1]==="string"}).map(function(e){
-    return '<div class="flex-between" style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;">' +
-      '<span style="color:#999;">'+escHtml(e[0])+'</span>' +
-      '<span style="color:#fff;">'+escHtml(e[1].substring(0,40)+(e[1].length>40?"…":""))+'</span></div>';
+    var key = escHtml(e[0]);
+    var val = escHtml(e[1]);
+    return '<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">' +
+      '<label style="display:block;color:#999;margin-bottom:4px;font-size:11px;">' + key + '</label>' +
+      '<input type="text" id="set-'+key+'" value="'+val+'" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:13px;outline:none;box-sizing:border-box;">' +
+      '</div>';
   }).join("");
-  form.innerHTML += '<div style="margin-top:12px;"><span class="btn btn-primary btn-sm" onclick="alert(\"设置编辑将在后续版本支持\")">编辑设置</span></div>';
+  form.innerHTML += '<div style="margin-top:16px;display:flex;gap:10px;">' +
+    '<span class="btn btn-primary btn-sm" onclick="saveSettings()">💾 保存设置</span>' +
+    '<span class="btn btn-sm" style="background:var(--border);color:var(--text-secondary);cursor:pointer;padding:6px 16px;border-radius:6px;" onclick="loadSettings()">↻ 重置</span></div>';
+}
+
+async function saveSettings() {
+  var inputs = document.querySelectorAll("#settingsForm input[type=text]");
+  var data = {};
+  inputs.forEach(function(inp) {
+    var key = inp.id.replace(/^set-/, "");
+    data[key] = inp.value;
+  });
+  var r = await api("/api/admin/settings", {method:"PUT", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data)});
+  if (r && r.ok) {
+    showToast("✅ 设置已保存");
+    loadSettings();
+  } else {
+    showToast("❌ 保存失败: " + (r&&r.error||"未知错误"));
+  }
 }
 
 init();
