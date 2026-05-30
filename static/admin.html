@@ -58,7 +58,13 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .tag-role-super{background:rgba(255,215,0,0.15);color:#FFD700}
 .tag-role-admin{background:rgba(22,93,255,0.15);color:var(--blue)}
 .tag-role-user{background:rgba(255,255,255,0.06);color:var(--text-secondary)}
-.action-btn{color:var(--blue);cursor:pointer;margin:0 4px;font-size:12px;padding:2px 6px;border-radius:4px;transition:background 0.15s;}
+.action-btn{color:var(--blue);cursor:pointer;margin:0 4px;font-size:12px;padding:2px 6px;border-radius:4px;transition:background 0.15s;user-select:none}
+.search-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.search-bar input{flex:1;min-width:160px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:13px;outline:none}
+.search-bar input:focus{border-color:var(--accent)}
+.comment-checkbox{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;vertical-align:middle}
+.batch-bar{display:none;margin-bottom:12px;padding:8px 12px;background:rgba(255,59,48,0.08);border:1px solid rgba(255,59,48,0.2);border-radius:8px;align-items:center;gap:10px;font-size:13px}
+.batch-bar.show{display:flex}
 .action-btn:hover{background:rgba(255,255,255,0.06)}
 .action-btn.danger{color:var(--danger)}
 .action-btn.accent{color:var(--accent)}
@@ -268,9 +274,24 @@ tr:hover td{background:rgba(255,255,255,0.02)}
         <span style="font-size:13px;color:var(--text-secondary);">管理所有工作室评论</span>
         <span class="btn btn-outline btn-sm" onclick="loadComments()">🔄 刷新</span>
       </div>
+      <div class="search-bar">
+        <input id="commentSearchInput" placeholder="🔍 搜工作室名或用户名..." oninput="filterComments()">
+        <select id="commentSortSelect" onchange="renderComments()" style="padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:13px;outline:none;">
+          <option value="newest">最新优先</option>
+          <option value="oldest">最早优先</option>
+        </select>
+      </div>
+      <div class="batch-bar" id="batchBar">
+        <span>已选 <strong id="batchCount">0</strong> 条</span>
+        <span class="btn btn-sm btn-danger" style="cursor:pointer;padding:4px 12px;" onclick="batchDeleteComments()">🗑️ 批量删除</span>
+        <span class="btn btn-sm" style="background:var(--border);color:var(--text-secondary);cursor:pointer;padding:4px 12px;" onclick="clearCommentSelection()">取消选择</span>
+      </div>
       <table>
-        <thead><tr><th>用户</th><th>评论内容</th><th>所属工作室</th><th>日期</th><th>操作</th></tr></thead>
-        <tbody id="commentTableBody"><tr><td colspan="5" class="empty">加载中...</td></tr></tbody>
+        <thead><tr>
+          <th style="width:36px;"><input type="checkbox" id="commentSelectAll" class="comment-checkbox" onchange="toggleAllComments(this.checked)"></th>
+          <th>用户</th><th>评论内容</th><th>所属工作室</th><th>日期</th><th style="width:60px;">操作</th>
+        </tr></thead>
+        <tbody id="commentTableBody"><tr><td colspan="6" class="empty">加载中...</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -594,24 +615,126 @@ async function loadReviews() {
 }
 
 // ===== Comments =====
+var _allComments = [];
+
 async function loadComments() {
+  // Ensure studio name map is loaded
+  if (ALL_STUDIOS.length === 0) {
+    var rb = await api("/api/redblack");
+    if (rb && rb.studios) ALL_STUDIOS = rb.studios;
+  }
   var d = await api("/api/admin/comments");
-  var tbody = document.getElementById("commentTableBody");
-  if (!d || !d.comments || d.comments.length===0) { tbody.innerHTML='<tr><td colspan="5" class="empty">暂无评论</td></tr>'; return; }
-  tbody.innerHTML = d.comments.slice(0,20).map(function(item){
-    var c = item.comment;
-    return '<tr><td style="color:var(--accent);">'+escHtml(c.user||"匿名")+'</td>'+
-      '<td style="font-size:12px;color:#999abb;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+escHtml(c.content||"")+'</td>'+
-      '<td style="font-size:12px;">'+escHtml(item.studio_id)+'</td>'+
-      '<td style="font-size:12px;">'+(c.date||"-")+'</td>'+
-      '<td><span class="action-btn danger" onclick="deleteComment(\''+c.id+'\')">🗑️</span></td></tr>';
-  }).join("");
+  document.getElementById("commentSelectAll").checked = false;
+  document.getElementById("batchBar").classList.remove("show");
+  if (!d || !d.comments || d.comments.length===0) {
+    _allComments = [];
+    document.getElementById("commentTableBody").innerHTML = '<tr><td colspan="6" class="empty">暂无评论</td></tr>';
+    return;
+  }
+  _allComments = d.comments;
+  renderComments();
 }
 
-async function deleteComment(cid) {
-  confirmModal("确定删除这条评论？", async function(){
-    await api("/api/admin/comments/"+cid, {method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"delete"})});
-    showToast("✅ 评论已删除");
+function getStudioName(sid) {
+  if (!ALL_STUDIOS || ALL_STUDIOS.length === 0) return sid;
+  var s = ALL_STUDIOS.filter(function(x){ return x.id === sid; })[0];
+  return s ? s.name : sid;
+}
+
+function renderComments() {
+  var data = _allComments;
+  // Search filter
+  var q = (document.getElementById("commentSearchInput").value || "").trim().toLowerCase();
+  if (q) {
+    var nameMap = {};
+    ALL_STUDIOS.forEach(function(s){ nameMap[s.id] = s.name; });
+    data = data.filter(function(item){
+      var c = item.comment;
+      var userName = (c.user || "匿名").toLowerCase();
+      var studioName = (nameMap[item.studio_id] || item.studio_id || "").toLowerCase();
+      return userName.indexOf(q) >= 0 || studioName.indexOf(q) >= 0;
+    });
+  }
+  // Sort
+  var sort = document.getElementById("commentSortSelect").value;
+  data = data.slice(); // copy
+  data.sort(function(a,b){
+    var da = (a.comment && a.comment.date) || "";
+    var db = (b.comment && b.comment.date) || "";
+    if (sort === "newest") return db.localeCompare(da);
+    return da.localeCompare(db);
+  });
+
+  var tbody = document.getElementById("commentTableBody");
+  if (data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">' + (q ? "无匹配结果" : "暂无评论") + '</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(function(item){
+    var c = item.comment;
+    var studioName = getStudioName(item.studio_id);
+    var content = c.content || "";
+    return '<tr>' +
+      '<td><input type="checkbox" class="comment-checkbox" value="'+c.id+'" onchange="updateBatchBar()"></td>'+
+      '<td style="color:var(--accent);">'+escHtml(c.user||"匿名")+'</td>'+
+      '<td style="font-size:12px;color:#999abb;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+escHtml(content)+'">'+escHtml(content)+'</td>'+
+      '<td style="font-size:12px;">'+escHtml(studioName)+'</td>'+
+      '<td style="font-size:12px;">'+(c.date||"-")+'</td>'+
+      '<td style="white-space:nowrap;"><span class="action-btn danger" onclick="deleteCommentById(\''+c.id+'\',\''+escHtml((c.user||"匿名")).replace(/'/g,"\\'")+'\',\''+escHtml(content.substring(0,30)).replace(/'/g,"\\'")+'\')">🗑️</span></td></tr>';
+  }).join("");
+  updateBatchBar();
+}
+
+function filterComments() {
+  renderComments();
+}
+
+function toggleAllComments(checked) {
+  var boxes = document.querySelectorAll("#commentTableBody .comment-checkbox");
+  boxes.forEach(function(b){ b.checked = checked; });
+  updateBatchBar();
+}
+
+function updateBatchBar() {
+  var boxes = document.querySelectorAll("#commentTableBody .comment-checkbox:checked");
+  var bar = document.getElementById("batchBar");
+  var count = boxes.length;
+  document.getElementById("batchCount").textContent = count;
+  bar.classList.toggle("show", count > 0);
+}
+
+function clearCommentSelection() {
+  document.getElementById("commentSelectAll").checked = false;
+  var boxes = document.querySelectorAll("#commentTableBody .comment-checkbox");
+  boxes.forEach(function(b){ b.checked = false; });
+  updateBatchBar();
+}
+
+function getSelectedCommentIds() {
+  var boxes = document.querySelectorAll("#commentTableBody .comment-checkbox:checked");
+  return Array.from(boxes).map(function(b){ return b.value; });
+}
+
+function batchDeleteComments() {
+  var ids = getSelectedCommentIds();
+  if (ids.length === 0) { showToast("❌ 未选中任何评论"); return; }
+  confirmModal("确定批量删除 <strong>"+ids.length+"</strong> 条评论？此操作不可恢复。", async function(){
+    var ok = 0, fail = 0;
+    for (var i = 0; i < ids.length; i++) {
+      var r = await api("/api/admin/comments/"+ids[i], {method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"delete"})});
+      if (r && r.ok) ok++; else fail++;
+    }
+    showToast("✅ 已删除 "+ok+" 条" + (fail ? "，失败 "+fail+" 条" : ""));
+    loadComments();
+  });
+}
+
+function deleteCommentById(cid, userName, preview) {
+  confirmModal("确定删除 <strong>"+escHtml(userName)+"</strong> 的评论：" +
+    '<blockquote style="margin:8px 0;padding:8px 12px;border-left:3px solid var(--danger);background:var(--bg);border-radius:6px;color:var(--text);font-size:13px;">'+escHtml(preview)+"…</blockquote>", async function(){
+    var r = await api("/api/admin/comments/"+cid, {method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"delete"})});
+    if (r && r.ok) { showToast("✅ 评论已删除"); }
+    else { showToast("❌ 删除失败"); }
     loadComments();
   });
 }
