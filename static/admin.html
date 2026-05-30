@@ -680,7 +680,7 @@ function renderComments() {
       '<td style="font-size:12px;color:#999abb;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+escHtml(content)+'">'+escHtml(content)+'</td>'+
       '<td style="font-size:12px;">'+escHtml(studioName)+'</td>'+
       '<td style="font-size:12px;">'+(c.date||"-")+'</td>'+
-      '<td style="white-space:nowrap;"><span class="action-btn danger" onclick="deleteCommentById(\''+c.id+'\',\''+escHtml((c.user||"匿名")).replace(/'/g,"\\'")+'\',\''+escHtml(content.substring(0,30)).replace(/'/g,"\\'")+'\')">🗑️</span></td></tr>';
+      '<td style="white-space:nowrap;"><span class="action-btn danger" onclick="deleteCommentById(\''+c.id+'\',\''+escHtml((c.user||"匿名")).replace(/'/g,"&#39;")+'\',\''+escHtml(content.substring(0,30)).replace(/'/g,"&#39;")+'\')">🗑️</span></td></tr>';
   }).join("");
   updateBatchBar();
 }
