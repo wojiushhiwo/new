@@ -547,9 +547,18 @@ def admin_moderate_comment(comment_id):
     return {"error": "未找到"}, 404
 
 # ===== Admin Routes =====
+@app.route("/admin")
 @app.route("/admin.html")
 @login_required
 def admin_page():
+    if not has_permission(session.get("user")):
+        return redirect(url_for("index"))
+    version = str(int(os.path.getmtime(os.path.join(STATIC_DIR, "admin.html"))))
+    return redirect("/a?v=" + version)
+
+@app.route("/a")
+@login_required
+def admin_page_buster():
     if not has_permission(session.get("user")):
         return redirect(url_for("index"))
     resp = make_response(send_from_directory(STATIC_DIR, "admin.html"))
