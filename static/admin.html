@@ -15,7 +15,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans G
 .sidebar{width:220px;background:var(--bg-sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
 .sidebar-brand{padding:18px;font-size:15px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
 .sidebar-brand small{font-size:10px;color:#555;font-weight:400}
-.sidebar-item{padding:10px 18px;font-size:13px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:10px;border-left:3px solid transparent;cursor:default;transition:0.15s}
+.sidebar-item{padding:10px 18px;font-size:13px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:10px;border-left:3px solid transparent;cursor:pointer;transition:0.15s}
 .sidebar-item:hover{color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.02)}
 .sidebar-item.active{color:#fff;background:rgba(22,93,255,0.08);border-left-color:var(--blue)}
 .sidebar-item.highlight{color:var(--accent);font-weight:600}
@@ -63,7 +63,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .action-btn.danger{color:var(--danger)}
 .action-btn.accent{color:var(--accent)}
 /* Button */
-.btn{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px;cursor:default}
+.btn{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px;cursor:pointer}
 .btn-primary{background:var(--blue);color:#fff;border:none}
 .btn-accent{background:var(--accent);color:#fff;border:none}
 .btn-outline{background:transparent;border:1px solid #3d4158;color:var(--text-secondary)}
@@ -359,6 +359,18 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
 </main>
 
+<!-- ===== Modal System ===== -->
+<div id="adminModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+  <div id="adminModalContent" style="background:var(--bg-card);border:1px solid var(--border-light);border-radius:14px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg-card);z-index:1;">
+      <span id="adminModalTitle" style="font-size:15px;font-weight:700;color:#fff;">标题</span>
+      <span id="adminModalClose" style="color:var(--text-muted);font-size:20px;cursor:pointer;line-height:1;">✕</span>
+    </div>
+    <div id="adminModalBody" style="padding:16px 20px;"></div>
+    <div id="adminModalFooter" style="padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;"></div>
+  </div>
+</div>
+
 <script>
 // ============================================================
 // Admin Backend - Full Management
@@ -385,7 +397,62 @@ function showToast(msg) {
   setTimeout(function(){ t.style.opacity="0"; t.style.transition="opacity 0.3s"; setTimeout(function(){ t.remove(); },300); }, 2500);
 }
 
-// ===== Init =====
+// ===== Modal System =====
+var _modalCallback = null;
+
+document.getElementById("adminModalClose").onclick = closeModal;
+document.getElementById("adminModal").onclick = function(e) { if (e.target === this) closeModal(); };
+
+function openModal(title, bodyHtml, footerBtns) {
+  var modal = document.getElementById("adminModal");
+  document.getElementById("adminModalTitle").textContent = title;
+  document.getElementById("adminModalBody").innerHTML = bodyHtml;
+  document.getElementById("adminModalFooter").innerHTML = footerBtns || '';
+  modal.style.display = "flex";
+}
+function closeModal() {
+  document.getElementById("adminModal").style.display = "none";
+  _modalCallback = null;
+}
+function modalField(label, id, val, opts) {
+  opts = opts || {};
+  var html = '<div style="margin-bottom:12px;">' +
+    '<label style="display:block;color:var(--text-secondary);font-size:11px;margin-bottom:4px;font-weight:600;">'+escHtml(label)+'</label>';
+  if (opts.type === "select") {
+    html += '<select id="'+id+'" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:13px;outline:none;">';
+    (opts.options||[]).forEach(function(o){
+      var sel = (val && val === o.value) ? ' selected' : '';
+      html += '<option value="'+escHtml(o.value)+'"'+sel+'>'+escHtml(o.label)+'</option>';
+    });
+    html += '</select>';
+  } else if (opts.type === "textarea") {
+    html += '<textarea id="'+id+'" rows="'+ (opts.rows||4) +'" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:13px;outline:none;resize:vertical;font-family:inherit;">'+escHtml(val||'')+'</textarea>';
+  } else if (opts.type === "password") {
+    html += '<input type="password" id="'+id+'" value="'+escHtml(val||'')+'" placeholder="'+escHtml(opts.placeholder||'')+'" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:13px;outline:none;">';
+  } else {
+    html += '<input type="text" id="'+id+'" value="'+escHtml(val||'')+'" placeholder="'+escHtml(opts.placeholder||'')+'" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:13px;outline:none;">';
+  }
+  html += '</div>';
+  return html;
+}
+function modalVal(id) {
+  var el = document.getElementById(id);
+  if (!el) return '';
+  return el.value;
+}
+function confirmModal(msg, onConfirm) {
+  _modalCallback = onConfirm;
+  var body = '<p style="font-size:14px;color:var(--text);line-height:1.8;">'+msg+'</p>';
+  var footer = '<span class="btn btn-sm" style="background:var(--border);color:var(--text-secondary);cursor:pointer;padding:6px 16px;" onclick="closeModal()">取消</span>' +
+    '<span class="btn btn-sm btn-danger" style="cursor:pointer;padding:6px 16px;" onclick="_confirmAction()">确定</span>';
+  openModal("确认操作", body, footer);
+}
+function _confirmAction() {
+  var cb = _modalCallback;
+  closeModal();
+  if (cb) cb();
+}
+
 async function init() {
   var sess = await api("/api/session");
   if (!sess || !sess.user) { window.location.href="/login"; return; }
@@ -542,9 +609,11 @@ async function loadComments() {
 }
 
 async function deleteComment(cid) {
-  if (!confirm("确定删除这条评论？")) return;
-  await api("/api/admin/comments/"+cid, {method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"delete"})});
-  loadComments();
+  confirmModal("确定删除这条评论？", async function(){
+    await api("/api/admin/comments/"+cid, {method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"delete"})});
+    showToast("✅ 评论已删除");
+    loadComments();
+  });
 }
 
 // ===== Redblack =====
@@ -650,87 +719,94 @@ function renderArticles() {
   }).join("");
 }
 
-function showArticleForm() {
-  var id = "article_" + Date.now();
-  var name = prompt("工作室名称：");
-  if (!name) return;
-  var platform = prompt("平台（闲鱼/抖音/B站/小红书）：");
-  if (!platform) return;
-  var detail = prompt("详情描述：");
-  if (!detail) return;
-  var risk = prompt("评价（safe/warning/danger）：", "danger");
-  if (!risk || ["safe","warning","danger"].indexOf(risk) < 0) { alert("请填 safe/warning/danger"); return; }
-  var source = prompt("来源：", "管理员录入");
-  var contact = prompt("联系方式（选填）：");
-  var date = new Date().toISOString().slice(0,7);
-  var data = {
-    id: id, name: name, platform: platform, detail: detail,
-    risk: risk, source: source || "管理员录入",
-    contact: contact || "", contact_hidden: !contact,
-    date: date, status: "published"
-  };
-  var r = confirm("确定添加 "+name+" ？");
-  if (!r) return;
-  ALL_STUDIOS.push(data);
-  saveStudioList();
+// ===== Studio Form (Modal) =====
+function showStudioForm(id) {
+  var s = id ? ALL_STUDIOS.filter(function(x){ return x.id === id; })[0] : null;
+  var isEdit = !!s;
+  var title = isEdit ? "✏️ 编辑工作室" : "➕ 新增工作室";
+  var body = modalField("工作室名称", "sf_name", s ? s.name : "", {placeholder:"必填"}) +
+    modalField("平台", "sf_platform", s ? s.platform : "", {
+      type: "select",
+      options: [{value:"",label:"请选择"},{value:"闲鱼",label:"闲鱼"},{value:"抖音",label:"抖音"},{value:"B站",label:"B站"},{value:"小红书",label:"小红书"},{value:"QQ",label:"QQ"},{value:"微信",label:"微信"},{value:"贴吧",label:"贴吧"},{value:"其他",label:"其他"}]
+    }) +
+    modalField("风险评级", "sf_risk", s ? s.risk : "danger", {
+      type: "select",
+      options: [{value:"danger",label:"🔴 高危 — 跑路/骗押金"},{value:"warning",label:"🟡 存疑 — 服务差/慢"},{value:"safe",label:"🟢 安全 — 靠谱实测"}]
+    }) +
+    modalField("认证等级", "sf_level", s ? s.level : "", {
+      type: "select",
+      options: [{value:"",label:"无认证"},{value:"platinum",label:"🥇 金牌"},{value:"gold",label:"🥉 黄牌"},{value:"silver",label:"🥈 银牌"}]
+    }) +
+    modalField("详细说明", "sf_detail", s ? s.detail : "", {type:"textarea", rows:5, placeholder:"必填，描述详细情况"});
+
+  if (!isEdit) {
+    body += modalField("来源", "sf_source", "管理员录入", {placeholder:"可选"}) +
+      modalField("联系方式", "sf_contact", "", {placeholder:"选填"});
+  }
+
+  var footer = '<span class="btn btn-sm" style="background:var(--border);color:var(--text-secondary);cursor:pointer;padding:6px 16px;" onclick="closeModal()">取消</span>' +
+    '<span class="btn btn-sm btn-primary" style="cursor:pointer;padding:6px 16px;" onclick="_submitStudioForm(\''+id+'\')">' + (isEdit ? "💾 保存" : "➕ 添加") + '</span>';
+  openModal(title, body, footer);
 }
 
-function editArticle(id) {
-  var s = ALL_STUDIOS.filter(function(x){ return x.id === id; })[0];
-  if (!s) { alert("未找到该工作室"); return; }
-  var name = prompt("工作室名称：", s.name);
-  if (!name) return;
-  var platform = prompt("平台：", s.platform);
-  if (!platform) return;
-  var detail = prompt("详情描述：", s.detail);
-  if (!detail) return;
-  var risk = prompt("评价（safe/warning/danger）：", s.risk);
-  if (!risk || ["safe","warning","danger"].indexOf(risk) < 0) { alert("请填 safe/warning/danger"); return; }
-  var source = prompt("来源：", s.source);
-  if (!source) return;
-  var contact = prompt("联系方式：", s.contact||"");
-  s.name = name; s.platform = platform; s.detail = detail; s.risk = risk;
-  s.source = source; s.contact = contact;
-  s.contact_hidden = !contact;
-  saveStudioList();
-}
+function _submitStudioForm(id) {
+  var name = modalVal("sf_name").trim();
+  if (!name) { showToast("❌ 请输入工作室名称"); return; }
+  var platform = modalVal("sf_platform");
+  var risk = modalVal("sf_risk");
+  var level = modalVal("sf_level");
+  var detail = modalVal("sf_detail").trim();
+  if (!detail) { showToast("❌ 请输入详细说明"); return; }
 
-async function saveStudioList() {
-  var r = await api("/api/admin/studios", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({studios: ALL_STUDIOS})});
-  if (r && r.ok) {
-    showToast("✅ 已保存");
-    loadRB();
-    renderArticles();
+  closeModal();
+
+  if (id) {
+    // Edit
+    var s = ALL_STUDIOS.filter(function(x){return x.id===id})[0];
+    if (!s) return;
+    api("/api/admin/studios/"+id, {method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+      name:name, risk:risk, level:level||false, detail:detail,
+      source:s.source||"管理员录入", platform:platform||s.platform||""
+    })}).then(function(r){
+      if (r&&r.ok) { showToast("✅ 已保存"); loadRB();loadDashboard();renderArticles(); }
+      else showToast("❌ 保存失败");
+    });
   } else {
-    showToast("❌ 保存失败");
+    // Add
+    var source = modalVal("sf_source").trim() || "管理员录入";
+    var contact = modalVal("sf_contact").trim();
+    api("/api/admin/studios", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+      name:name, platform:platform, risk:risk, detail:detail,
+      source:source, contact:contact, contact_hidden:!contact
+    })}).then(function(r){
+      if (r&&r.ok) { showToast("✅ 已添加"); loadRB();loadDashboard();renderArticles(); }
+      else showToast("❌ 添加失败");
+    });
   }
 }
 
+// ===== Article Management =====
+function showArticleForm() {
+  showStudioForm(null);
+}
+function editArticle(id) {
+  showStudioForm(id);
+}
+
 async function deleteRB(id,name) {
-  if (!confirm("确定删除 "+name+" ？")) return;
-  await api("/api/admin/studios/"+id, {method:"DELETE"});
-  loadRB();loadDashboard();
+  confirmModal("确定删除 <strong>"+escHtml(name)+"</strong> ？此操作不可恢复。", async function(){
+    var r = await api("/api/admin/studios/"+id, {method:"DELETE"});
+    if (r&&r.ok) { showToast("✅ 已删除"); loadRB();loadDashboard();renderArticles(); }
+    else showToast("❌ 删除失败");
+  });
 }
 
 function showRBForm() {
-  RB_EDITING_ID = null;
-  var name = prompt("工作室名称：");
-  if (!name || !name.trim()) return;
-  var platform = prompt("平台（闲鱼/抖音/B站/QQ/微信）：") || "";
-  var risk = prompt("风险（safe/warning/danger，默认warning）：") || "warning";
-  var detail = prompt("详细说明：") || "";
-  api("/api/admin/studios", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name.trim(),platform:platform,risk:risk,detail:detail,source:"管理员录入"})}).then(function(){loadRB();loadDashboard();});
+  showStudioForm(null);
 }
 
 function editRB(id) {
-  var s = ALL_STUDIOS.filter(function(x){return x.id===id})[0];
-  if (!s) return;
-  var name = prompt("工作室名称：", s.name);
-  if (!name || !name.trim()) return;
-  var risk = prompt("风险（safe/warning/danger）：", s.risk||"warning");
-  var level = prompt("认证等级（platinum/gold/silver/空）：", s.level||"");
-  var detail = prompt("详细说明：", s.detail||"");
-  api("/api/admin/studios/"+id, {method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name.trim(),risk:risk,level:level||"",detail:detail,source:s.source||"管理员录入",platform:s.platform||""})}).then(function(){loadRB();loadDashboard();});
+  showStudioForm(id);
 }
 
 // ===== Admin Users =====
@@ -760,24 +836,49 @@ async function loadAdminUsers() {
 }
 
 function showAdminForm() {
-  var name = prompt("新管理员用户名：");
-  if (!name||!name.trim()) return;
-  var pwd = prompt("密码（至少4位）：");
-  if (!pwd||pwd.length<4) { alert("密码至少4位"); return; }
-  var perms = prompt("权限（studios,reviews,settings,invites,redblack，逗号分隔，空=全部）：") || "";
+  var body = modalField("用户名", "af_user", "", {placeholder:"新管理员用户名"}) +
+    modalField("密码", "af_pwd", "", {type:"password", placeholder:"至少4位"}) +
+    modalField("权限", "af_perms", "", {
+      type: "select",
+      options: [
+        {value:"", label:"全部权限"},
+        {value:"studios,reviews,redblack,settings,invites", label:"全部-手动选"},
+        {value:"studios,reviews", label:"文章管理+投稿审核"},
+        {value:"studios,reviews,redblack", label:"文章+审核+红黑榜"},
+        {value:"reviews,settings", label:"投稿审核+网站设置"},
+        {value:"invites", label:"仅邀请码管理"}
+      ]
+    }) +
+    '<div style="margin-top:8px;"><input type="text" id="af_perms_custom" placeholder="自定义（逗号分隔）：studios,reviews..." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:13px;outline:none;"></div>' +
+    '<p style="font-size:11px;color:var(--text-muted);margin-top:4px;">可用权限：studios文章管理 reviews投稿审核 redblack红黑榜 settings网站设置 invites邀请码</p>';
+  var footer = '<span class="btn btn-sm" style="background:var(--border);color:var(--text-secondary);cursor:pointer;padding:6px 16px;" onclick="closeModal()">取消</span>' +
+    '<span class="btn btn-sm btn-primary" style="cursor:pointer;padding:6px 16px;" onclick="_submitAdminForm()">➕ 添加</span>';
+  openModal("➕ 添加管理员", body, footer);
+}
+
+function _submitAdminForm() {
+  var name = modalVal("af_user").trim();
+  if (!name) { showToast("❌ 请输入用户名"); return; }
+  var pwd = modalVal("af_pwd");
+  if (!pwd || pwd.length < 4) { showToast("❌ 密码至少4位"); return; }
+  var perms = modalVal("af_perms_custom").trim() || modalVal("af_perms");
+  closeModal();
   api("/api/admin/users", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
-    username:name.trim(), password:pwd, role:"admin",
+    username:name, password:pwd, role:"admin",
     permissions: perms ? perms.split(",").map(function(p){return p.trim()}) : []
   })}).then(function(r){
-    if (r&&r.ok) loadAdminUsers(); else alert(r?.error||"创建失败");
+    if (r&&r.ok) { showToast("✅ 管理员已添加"); loadAdminUsers(); }
+    else showToast("❌ " + (r?.error||"创建失败"));
   });
 }
 
 async function deleteAdminUser(name) {
-  if (name===CURRENT_USER) { alert("不能删除自己"); return; }
-  if (!confirm("确定删除用户 "+name+" ？")) return;
-  var r = await api("/api/admin/users/"+name, {method:"DELETE"});
-  if (r&&r.ok) loadAdminUsers(); else alert(r?.error||"删除失败");
+  if (name===CURRENT_USER) { showToast("❌ 不能删除自己"); return; }
+  confirmModal("确定删除用户 <strong>"+escHtml(name)+"</strong> ？", async function(){
+    var r = await api("/api/admin/users/"+name, {method:"DELETE"});
+    if (r&&r.ok) { showToast("✅ 已删除"); loadAdminUsers(); }
+    else showToast("❌ " + (r?.error||"删除失败"));
+  });
 }
 
 // ===== Invites =====
@@ -795,17 +896,25 @@ async function loadInvites() {
 }
 
 async function genInvites() {
+  var body = '<p style="font-size:14px;color:var(--text);margin-bottom:12px;">将生成 5 个新的邀请码：</p>' +
+    '<div id="inviteCodesResult" style="font-family:monospace;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:13px;color:var(--accent);line-height:2;">生成中...</div>';
+  var footer = '<span class="btn btn-sm btn-primary" style="cursor:pointer;padding:6px 16px;" onclick="closeModal();loadInvites()">关闭</span>';
+  openModal("🔑 邀请码", body, footer);
   var r = await api("/api/admin/invites", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({count:5})});
-  if (r&&r.ok) {
-    alert("生成成功：\n"+r.codes.join("\n"));
-    loadInvites();
+  var el = document.getElementById("inviteCodesResult");
+  if (r&&r.ok && el) {
+    el.innerHTML = r.codes.map(function(c){ return '<div>'+escHtml(c)+'</div>'; }).join("");
+  } else if (el) {
+    el.innerHTML = '<span style="color:var(--danger);">生成失败</span>';
   }
 }
 
 async function deleteInvite(code) {
-  if (!confirm("删除邀请码 "+code+"？")) return;
-  await api("/api/admin/invites/"+code, {method:"DELETE"});
-  loadInvites();
+  confirmModal("确定删除邀请码 <strong>"+escHtml(code)+"</strong> ？", async function(){
+    await api("/api/admin/invites/"+code, {method:"DELETE"});
+    showToast("✅ 已删除");
+    loadInvites();
+  });
 }
 
 // ===== Settings =====

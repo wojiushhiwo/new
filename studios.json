@@ -284,5 +284,61 @@
     "source": "B站+闲鱼案例",
     "id": "s025",
     "status": "published"
+  },
+  {
+    "id": "s026",
+    "name": "测试工作室",
+    "risk": "danger",
+    "level": false,
+    "platform": "闲鱼",
+    "contact": "test123",
+    "detail": "这是测试投稿",
+    "contact_back": "",
+    "date": "2026-05-30",
+    "source": "用户投稿",
+    "reporter": "anonymous",
+    "status": "rejected"
+  },
+  {
+    "id": "s027",
+    "name": "s da s d",
+    "risk": "warning",
+    "level": false,
+    "platform": "闲鱼",
+    "contact": "da s da s da",
+    "detail": "dsa da dasd a",
+    "contact_back": "",
+    "date": "2026-05-30",
+    "source": "用户投稿",
+    "reporter": "anonymous",
+    "status": "rejected"
+  },
+  {
+    "id": "s028",
+    "name": "dsada",
+    "risk": "danger",
+    "level": false,
+    "platform": "闲鱼",
+    "contact": "大大大dsad",
+    "detail": "大大是大大",
+    "contact_back": "",
+    "date": "2026-05-30",
+    "source": "用户投稿",
+    "reporter": "anonymous",
+    "status": "rejected"
+  },
+  {
+    "id": "s029",
+    "name": "收到",
+    "risk": "danger",
+    "level": false,
+    "platform": "闲鱼",
+    "contact": "大大",
+    "detail": "打算",
+    "contact_back": "",
+    "date": "2026-05-30",
+    "source": "用户投稿",
+    "reporter": "anonymous",
+    "status": "published"
   }
 ]
